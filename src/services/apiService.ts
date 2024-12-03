@@ -20,7 +20,7 @@ class ApiService {
       },
       (error) => {
         return Promise.reject(error);
-      }
+      },
     );
 
     // Intercept responses to handle errors globally
@@ -29,37 +29,71 @@ class ApiService {
       (error) => {
         console.error('Response error:', error);
         return Promise.reject(error);
-      }
+      },
     );
   }
 
   // Perform GET request
-  async get<T>(url: string, params?: Record<string, unknown>, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.get(url, { params, ...config });
+  async get<T>(
+    url: string,
+    params?: Record<string, unknown>,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.get(url, {
+      params,
+      ...config,
+    });
     return response.data;
   }
 
   // Perform POST request
-  async post<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.post(url, data, config);
+  async post<T>(
+    url: string,
+    data: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.post(
+      url,
+      data,
+      config,
+    );
     return response.data;
   }
 
   // Perform PUT request
-  async put<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.put(url, data, config);
+  async put<T>(
+    url: string,
+    data: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.put(
+      url,
+      data,
+      config,
+    );
     return response.data;
   }
 
   // Perform DELETE request
   async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.delete(url, config);
+    const response: AxiosResponse<T> = await this.axiosInstance.delete(
+      url,
+      config,
+    );
     return response.data;
   }
 
   // Perform PATCH request
-  async patch<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.patch(url, data, config);
+  async patch<T>(
+    url: string,
+    data: unknown,
+    config?: AxiosRequestConfig,
+  ): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.patch(
+      url,
+      data,
+      config,
+    );
     return response.data;
   }
 }

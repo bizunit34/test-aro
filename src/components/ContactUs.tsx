@@ -36,7 +36,6 @@ const ContactUs: React.FC = () => {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
   const handleServiceChange = (event: SelectChangeEvent<string[]>) => {
-    console.log('event: ', event);
     setSelectedServices(event.target.value as string[]);
   };
 

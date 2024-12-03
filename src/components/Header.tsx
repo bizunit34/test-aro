@@ -95,12 +95,12 @@ function Header() {
 
   return (
     <AppBar
-     position='static'
-     sx={{
-      backgroundColor: 'var(--background-secondary)',
-      color: 'var(--foreground)',
-    }}
-     >
+      position='static'
+      sx={{
+        backgroundColor: 'var(--background-secondary)',
+        color: 'var(--foreground)',
+      }}
+    >
       <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <Link title='Home' href='/'>
