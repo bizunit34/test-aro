@@ -36,7 +36,9 @@ export default function RootLayout({
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <Header />
-            {children}
+            <div className='main'>
+              {children}
+            </div>
             <Footer />
           </ThemeProvider>
         </AppRouterCacheProvider>

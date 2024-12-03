@@ -4,13 +4,27 @@
 
 :root {
   --background: #ffffff;
+  --background-secondary: #cbcbcb;
+  --background-tertiary: #aeaeae;
   --foreground: #171717;
+  --foreground-secondary: #171717;
+  --foreground-tertiary: #3e3e3e;
+  --button-primary: #006ad4;
+  --button-secondary: #396898;
+  --button-tertiary: #3b4f63bc;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
+    --background-secondary: #3a3a3a;
+    --background-tertiary: #4d4d4d;
     --foreground: #ededed;
+    --foreground-secondary: #c4c4c4;
+    --foreground-tertiary: #acacac;
+    --button-primary: #006ad4;
+    --button-secondary: #396898;
+    --button-tertiary: #3b4f63bc;
   }
 }
 
@@ -18,7 +32,31 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+  height: auto;
+  min-height: 100%;
 }
+
+.main {
+  padding-bottom: 10px;
+}
+
+button {
+  background-color: var(--button-primary);
+  color: var(--foreground-secondary);
+}
+
+form {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+input {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 
 svg {
   color: var(--foreground);

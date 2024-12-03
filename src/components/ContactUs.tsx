@@ -20,11 +20,11 @@ import {
 } from '@mui/material';
 
 const services = [
-  'Web Development',
-  'Mobile App Development',
-  'UI/UX Design',
-  'Digital Marketing',
-  'SEO Optimization',
+  'Member Pricing for oPackaging & Products',
+  'Marketing & Branding',
+  'Billboard Advertising',
+  'Ad Campaigns',
+  'Web Design & Development',
 ];
 
 const ContactUs: React.FC = () => {

@@ -9,14 +9,15 @@ const Footer: React.FC = () => {
     <Box
       component='footer'
       sx={{
-        backgroundColor: 'primary.main',
+        backgroundColor: 'var(--background-secondary)',
         color: 'var(--foreground)',
         padding: 3,
-        marginTop: 'auto',
+        marginTop: '-10px',
+        position: 'relative',
       }}
     >
       <Container maxWidth='lg'>
-        <div>
+        <div className='flex'>
           <a className='flex' href='tel:+12486333525'>
             <FontAwesomeIcon
               icon={faPhone}
