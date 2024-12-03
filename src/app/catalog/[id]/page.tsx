@@ -1,18 +1,14 @@
 import React from 'react';
 import ItemDetails from '../../../components/ItemDetails';
 import { Item } from '@/models';
+import ItemService from '@/services/itemService';
 
-const ItemDetailsPage: React.FC = () => {
-  const item: Item = {
-    id: 1,
-    title: 'Gaming Laptop',
-    description: 'High-performance laptop for gaming and productivity.',
-    image: 'https://via.placeholder.com/600x300',
-    price: 1200,
-    quantityOnHand: 52,
-    quantityOnOrder: 4,
-    quantityOnBackOrder: 22,
-  };
+const ItemDetailsPage: React.FC<{itemId: number}> = async ({itemId}) => {
+  const item: Item | undefined = await ItemService.getItem(itemId);
+
+  if (item == null) {
+    throw new Error('Item not found.')
+  }
 
   const frequentlyPurchasedTogether = [
     {
