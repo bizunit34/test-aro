@@ -26,7 +26,11 @@ const UserService = {
     await axios.post(`${API_BASE_URL}/logout`);
   },
 
-  signUp: async (payload: { name: string; email: string; password: string }) => {
+  signUp: async (payload: {
+    name: string;
+    email: string;
+    password: string;
+  }) => {
     const response = await axios.post(`${API_BASE_URL}/signup`, payload);
     return response.data;
   },

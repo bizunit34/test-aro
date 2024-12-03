@@ -17,7 +17,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-const pages: Array<{title: string; route: string}> = [
+const pages: Array<{ title: string; route: string }> = [
   {
     title: 'Packaging',
     route: '/packaging',
@@ -34,11 +34,15 @@ const pages: Array<{title: string; route: string}> = [
     title: 'Catalog',
     route: '/catalog',
   },
+  {
+    title: 'Contact',
+    route: '/contact',
+  },
 ];
 const settings: Array<{
   title: string;
-   route: string;
-  }> = [
+  route: string;
+}> = [
   {
     title: 'Login',
     route: '/login',
@@ -200,7 +204,10 @@ function Header() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting.title} onClick={() => handleNavigation(setting.route)}>
+                <MenuItem
+                  key={setting.route}
+                  onClick={() => handleNavigation(setting.route)}
+                >
                   <Typography sx={{ textAlign: 'center' }}>
                     {setting.title}
                   </Typography>

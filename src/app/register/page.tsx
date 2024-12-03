@@ -27,45 +27,49 @@ const Register: React.FC = () => {
         router.push('/login'); // Redirect to login page after sign-up
       }, 2000);
     } catch (err) {
-      console.error('Error: ', err)
+      console.error('Error: ', err);
       setError('Sign-up failed. Please try again.');
     }
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth='sm'>
       <Box sx={{ mt: 8 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Sign Up
         </Typography>
-        {error && <Alert severity="error">{error}</Alert>}
-        {success && <Alert severity="success">Sign-up successful! Redirecting to login...</Alert>}
+        {error && <Alert severity='error'>{error}</Alert>}
+        {success && (
+          <Alert severity='success'>
+            Sign-up successful! Redirecting to login...
+          </Alert>
+        )}
         <Box sx={{ mt: 2 }}>
           <TextField
-            label="Name"
+            label='Name'
             fullWidth
-            margin="normal"
+            margin='normal'
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
           <TextField
-            label="Email"
+            label='Email'
             fullWidth
-            margin="normal"
+            margin='normal'
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <TextField
-            label="Password"
-            type="password"
+            label='Password'
+            type='password'
             fullWidth
-            margin="normal"
+            margin='normal'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <Button
-            variant="contained"
-            color="primary"
+            variant='contained'
+            color='primary'
             fullWidth
             sx={{ mt: 2 }}
             onClick={handleSignUp}
@@ -79,4 +83,3 @@ const Register: React.FC = () => {
 };
 
 export default Register;
-
