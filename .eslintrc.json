@@ -1,15 +1,11 @@
 {
   "parser": "@typescript-eslint/parser",
-       "plugins": [
-           "@typescript-eslint",
-           "simple-import-sort",
-            "import"
-       ],
+  "plugins": ["@typescript-eslint", "simple-import-sort", "import"],
   "parserOptions": {
     "project": "./tsconfig.json",
     "sourceType": "module",
     "ecmaVersion": "latest"
-},
+  },
   "extends": [
     "next/core-web-vitals",
     "eslint:recommended",
@@ -18,20 +14,21 @@
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/recommended",
-           "plugin:@typescript-eslint/recommended-requiring-type-checking",
-     "next/typescript",
-           "plugin:prettier/recommended",
-      "prettier"
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "next/typescript",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "padding-line-between-statements": [
+      "error",
+      { "blankLine": "always", "prev": "*", "next": "return" }
     ],
-    "rules": {
-      "padding-line-between-statements": [
-        "error",
-        { "blankLine": "always", "prev": "*", "next": "return" }
-      ],
-      "simple-import-sort/imports": "error",
-      "simple-import-sort/exports": "error",
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "import/first": "error",
     "import/newline-after-import": "error",
-    "import/no-duplicates": "error"
-    }
+    "import/no-duplicates": "error",
+    "keyword-spacing": ["error", { "before": true, "after": true }]
+  }
 }

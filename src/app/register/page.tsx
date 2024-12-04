@@ -75,8 +75,8 @@ const Register: React.FC = () => {
             sx={{ mt: 2 }}
             onClick={() => {
               handleSignUp().catch((err) => console.error(err));
-            }
-            }>
+            }}
+          >
             Sign Up
           </Button>
         </Box>

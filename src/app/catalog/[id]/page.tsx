@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import Script from 'next/script';
 
 import { Item } from '@/models';
 import ItemService from '@/services/itemService';
@@ -37,10 +38,20 @@ const ItemDetailsPage: React.FC = () => {
   ];
 
   return (
-    <ItemDetails
-      item={item}
-      frequentlyPurchasedTogether={frequentlyPurchasedTogether}
+    <>
+    <Script
+      src='https://cdn.pacdora.com/Pacdora-v*.*.*.js'
+      onLoad={() => {
+        console.log('Pacdora script')
+        console.log('Script has loaded');
+      }}
     />
+      <ItemDetails
+        item={item}
+        frequentlyPurchasedTogether={frequentlyPurchasedTogether}
+      />
+      
+    </>
   );
 };
 

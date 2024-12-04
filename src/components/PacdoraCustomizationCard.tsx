@@ -1,28 +1,144 @@
-import { Container } from '@mui/material';
+import { Container, SelectChangeEvent } from '@mui/material';
 import React from 'react';
 
 import { Item } from '@/models';
+
+const PRICE_CONFIG: Record<string, Array<SimpleQuotationItem>> = {
+  paper: [
+    {
+      name: 'White card board',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 1.5,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+    {
+      name: 'E-flute paper',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 2.6,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+    {
+      name: 'B-flute paper',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 2.9,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+    {
+      name: 'Kraft paper',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 1.2,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+  ],
+  print: [
+    {
+      name: 'default',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 0.5,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+  ],
+  surface: [
+    {
+      name: 'blank',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 0,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+    {
+      name: 'gloss',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 0.35,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+    {
+      name: 'matte',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 0.3,
+          unit: 'm',
+          minFee: 0,
+        },
+      ],
+    },
+  ],
+  cut: [
+    {
+      name: 'default',
+      range: [
+        {
+          minCount: 1,
+          maxCount: 999999,
+          price: 0.1,
+          unit: '',
+          minFee: 0,
+        },
+      ],
+    },
+  ],
+};
 
 interface ItemDetailsProps {
   item: Item;
 }
 
 class RangeItem {
-  public name: string;
   public minCount: number;
   public maxCount: number;
   public minFee: number;
   public price: number;
-  public unit: number;
+  public unit: string;
   constructor(
-    name: string,
     minCount: number,
     maxCount: number,
     minFee: number,
     price: number,
-    unit: number,
+    unit: string,
   ) {
-    this.name = name;
     this.minCount = minCount;
     this.maxCount = maxCount;
     this.minFee = minFee;
@@ -59,9 +175,9 @@ class CalcResultItem {
 }
 
 class CalcResult {
-  public fee: unknown;
+  public fee: number;
   public list: unknown;
-  constructor(fee: unknown, list: unknown) {
+  constructor(fee: number, list: unknown) {
     this.fee = fee;
     this.list = list;
   }
@@ -146,7 +262,14 @@ class SimpleQuotation {
     );
   }
 
-  makeQuotationByCount({ count }: { count: number }, config: CalcResultItem) {
+  makeQuotationByCount(
+    { count }: { count: number },
+    config: CalcResultItem | RangeItem | undefined,
+  ) {
+    if (config == null) {
+      return;
+    }
+
     const fee = Math.max(config.price * count, config.minFee || 0);
 
     return new CalcResultItem(
@@ -212,18 +335,31 @@ class SimpleQuotation {
     }
 
     const { count, cutName = 'default' } = this.params;
-    const cfg = this.getQuotationConfig('cut', cutName, count);
+    const cfg: RangeItem | undefined = this.getQuotationConfig(
+      'cut',
+      cutName,
+      count,
+    );
 
     return this.makeQuotationByCount({ count }, cfg);
   }
 }
 
+function getQueryValue(queryName: string) {
+  const paramsString = window.location.search.substring(1);
+  const params = new URLSearchParams(paramsString);
+
+  return params.get(queryName);
+}
+
 function makeQuotationForBox() {
-  const dimension = document.querySelector('#dimension');
-  const material = document.querySelector('#material');
-  const print = document.querySelector('#print');
-  const finishing = document.querySelector('#finishing');
-  const number = document.querySelector('#number');
+  const dimension: HTMLInputElement | null =
+    document.querySelector('#dimension');
+  const material: HTMLInputElement | null = document.querySelector('#material');
+  const print: HTMLInputElement | null = document.querySelector('#print');
+  const finishing: HTMLInputElement | null =
+    document.querySelector('#finishing');
+  const number: HTMLInputElement | null = document.querySelector('#number');
 
   if (
     !dimension?.value ||
@@ -262,7 +398,12 @@ function makeQuotationForBox() {
     cutName: 'default',
   });
   if (result) {
-    const price = document.querySelector('#price-box');
+    const price: Element | null = document.querySelector('#price-box');
+
+    if (price == null) {
+      return;
+    }
+
     price.innerHTML = '$' + result.fee.toFixed(1);
     price.innerHTML = `
       <span class="price-text">Total:</span>
@@ -276,14 +417,20 @@ function makeQuotationForBox() {
 }
 
 function makeQuotationForMockup() {
-  const number = document.querySelector('#number');
-  if (!number.value) {
+  const number: HTMLInputElement | null = document.querySelector('#number');
+
+  if (!number?.value) {
     return;
   }
 
   const fee = 3 * Number(number.value);
 
-  const price = document.querySelector('#price-box');
+  const price: HTMLInputElement | null = document.querySelector('#price-box');
+
+  if (price == null) {
+    return;
+  }
+
   price.innerHTML = '$' + fee.toFixed(1);
   price.innerHTML = `
     <span class="price-text">Total:</span>
@@ -309,39 +456,55 @@ function makeQuotation() {
 }
 
 // Transition animation method for the slide switch component
-function onSwitch2DAnd3D(type) {
+function onSwitch2DAnd3D(type: string) {
   const switchItems = document.querySelectorAll('.switch-item');
-  const boxInfo = document.querySelector('.box-info-slider');
+  const boxInfo: HTMLInputElement | null =
+    document.querySelector('.box-info-slider');
   if (type === '3d') {
     switchItems[0].className = 'switch-item active';
     switchItems[1].className = 'switch-item';
     switchItems[2].className = 'switch-item';
-    boxInfo.style.transform = 'translateX(0)';
+
+    if (boxInfo != null) {
+      boxInfo.style.transform = 'translateX(0)';
+    }
   } else if (type === 'dieline') {
     switchItems[0].className = 'switch-item';
     switchItems[1].className = 'switch-item active';
     switchItems[2].className = 'switch-item';
-    boxInfo.style.transform = 'translateX(-100%)';
+
+    if (boxInfo != null) {
+      boxInfo.style.transform = 'translateX(-100%)';
+    }
   } else {
     switchItems[0].className = 'switch-item';
     switchItems[1].className = 'switch-item';
     switchItems[2].className = 'switch-item active';
 
-    boxInfo.style.transform = 'translateX(-200%)';
+    if (boxInfo != null) {
+      boxInfo.style.transform = 'translateX(-200%)';
+    }
   }
 }
 
-function openPacdora(ratio) {
+function openPacdora(ratio: number) {
   Pacdora.collapse('d3', ratio);
-  const pointer = document.querySelector('.pointer');
-  pointer.style.left = `${ratio * 100}%`;
-  const selected = document.querySelector('.slider-selecter');
-  selected.style.width = `${ratio * 100}%`;
+  const pointer: HTMLInputElement | null = document.querySelector('.pointer');
+  if (pointer != null) {
+    pointer.style.left = `${ratio * 100}%`;
+  }
+  const selected: HTMLInputElement | null =
+    document.querySelector('.slider-selecter');
+  if (selected != null) {
+    selected.style.width = `${ratio * 100}%`;
+  }
 }
 
 // Control methods for the Slider component
-function onSliderDown(e) {
-  const parentBounding = e.parentNode.getBoundingClientRect();
+function onSliderDown(e: React.PointerEvent<HTMLDivElement>) {
+  const parentBounding = (
+    e as unknown as HTMLElement
+  ).parentNode?.getBoundingClientRect();
   document.onpointermove = (ev) => {
     ev.preventDefault();
     const { clientX } = ev;
@@ -370,7 +533,7 @@ function onSliderDown(e) {
  * @param {*} e
  * @returns
  */
-function onChangeDimension(e) {
+function onChangeDimension(e: React.ChangeEvent<HTMLSelectElement>) {
   let value = e.value;
   if (value === '') {
     return;
@@ -419,7 +582,7 @@ function onChangeDimension(e) {
  * updates the project via the Pacdora.setMaterial method.
  * @param {*} e
  */
-function onChangeMaterial(e) {
+function onChangeMaterial(e: React.ChangeEvent<HTMLSelectElement>) {
   const value = e.value;
   if (value !== '') {
     switch (value) {
@@ -456,7 +619,7 @@ function onChangeMaterial(e) {
  * updates the project via the Pacdora.setThickness method.
  * @param {*} e
  */
-function onChangeThickness(e) {
+function onChangeThickness(e: React.ChangeEvent<HTMLSelectElement>) {
   const value = e.value;
   if (value !== '') {
     Pacdora.setThickness({
@@ -467,15 +630,15 @@ function onChangeThickness(e) {
   makeQuotation();
 }
 
-function onChangePrint(e) {
+function onChangePrint(e: React.ChangeEvent<HTMLSelectElement>) {
   makeQuotation();
 }
 
-function onChangeFinishing(e) {
+function onChangeFinishing(e: React.ChangeEvent<HTMLSelectElement>) {
   makeQuotation();
 }
 
-function onChangeNumber(e) {
+function onChangeNumber(e: React.ChangeEvent<HTMLSelectElement>) {
   const value = e.value;
   if (value === 'customize') {
     const number = prompt('Please input your number');
@@ -547,7 +710,9 @@ const ItemDetails: React.FC<ItemDetailsProps> = (
                   <div className='slider-selecter'></div>
                   <div
                     className='pointer'
-                    onPointerDown='onSliderDown(this)'
+                    onPointerDown={(e: React.PointerEvent<HTMLDivElement>) =>
+                      onSliderDown(e)
+                    }
                   ></div>
                 </div>
                 <div onClick={() => openPacdora(1)}>Close</div>
