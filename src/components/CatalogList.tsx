@@ -1,10 +1,11 @@
 'use client';
 
+import { Box, Container, Grid2, Pagination, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Box, Container, Typography, Pagination } from '@mui/material';
-import { Grid2 } from '@mui/material';
-import CatalogListCard from './CatalogListCard';
+
 import { Item } from '@/models';
+
+import CatalogListCard from './CatalogListCard';
 
 interface CatalogProps {
   items: Array<Item>;

@@ -1,9 +1,6 @@
-import React from 'react';
 import {
+  Avatar,
   Box,
-  Card,
-  CardContent,
-  CardMedia,
   Container,
   List,
   ListItem,
@@ -15,9 +12,12 @@ import {
   TableContainer,
   TableRow,
   Typography,
-  Avatar,
 } from '@mui/material';
+import React from 'react';
+
 import { Item } from '@/models';
+
+import CatalogListCard from './CatalogListCard';
 
 interface ItemDetailsProps {
   item: Item;
@@ -29,76 +29,67 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
   frequentlyPurchasedTogether,
 }) => {
   return (
-    <Container maxWidth='md' sx={{ mt: 4 }}>
-      {/* Item Image and Title */}
-      <Card>
-        <CardMedia
-          component='img'
-          height='300'
-          image={item.image}
-          alt={item.title}
-        />
-        <CardContent>
-          <Typography variant='h4' gutterBottom>
-            {item.title}
-          </Typography>
-          <Typography variant='body1' color='text.secondary'>
-            {item.description}
-          </Typography>
-        </CardContent>
-      </Card>
+    <div>
+      <Container maxWidth='md' sx={{ mt: 4 }} className='flex'>
+        {/* Item Image and Title */}
+        <div style={{ width: '300px', marginRight: '20px' }}>
+          <CatalogListCard key={item.id} item={item} />
+        </div>
 
-      {/* Item Details Table */}
-      <Box mt={4}>
-        <Typography variant='h5' gutterBottom>
-          Item Details
-        </Typography>
-        <TableContainer>
-          <Table>
-            <TableBody>
-              {Object.entries([
-                ['price', item.price],
-                ['quantityOnHand', item.quantityOnHand],
-                ['quantityOnOrder', item.quantityOnOrder],
-                ['quantityOnBackOrder', item.quantityOnBackOrder],
-              ]).map(([key, value]) => (
-                <TableRow key={key}>
-                  <TableCell variant='head' sx={{ fontWeight: 'bold' }}>
-                    {key}
-                  </TableCell>
-                  <TableCell>{value}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Box>
+        {/* Item Details Table */}
+        <Box mt={4}>
+          <Typography variant='h5' gutterBottom>
+            Item Details
+          </Typography>
+          <TableContainer>
+            <Table>
+              <TableBody>
+                {Object.entries({
+                  price: item.price,
+                  quantityOnHand: item.quantityOnHand,
+                  quantityOnOrder: item.quantityOnOrder,
+                  quantityOnBackOrder: item.quantityOnBackOrder,
+                }).map(([key, value]) => (
+                  <TableRow key={key}>
+                    <TableCell variant='head' sx={{ fontWeight: 'bold' }}>
+                      {key}
+                    </TableCell>
+                    <TableCell>{value}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+      </Container>
 
-      {/* Frequently Purchased Together */}
-      <Box mt={4}>
-        <Typography variant='h5' gutterBottom>
-          Frequently Purchased Together
-        </Typography>
-        <List>
-          {frequentlyPurchasedTogether.map((relatedItem) => (
-            <ListItem key={relatedItem.id} alignItems='flex-start'>
-              <ListItemAvatar>
-                <Avatar
-                  src={relatedItem.image}
-                  alt={relatedItem.title}
-                  variant='square'
-                  sx={{ width: 80, height: 80 }}
+      <Container maxWidth='md' sx={{ mt: 4 }} className='flex'>
+        {/* Frequently Purchased Together */}
+        <Box mt={4}>
+          <Typography variant='h5' gutterBottom>
+            Frequently Purchased Together
+          </Typography>
+          <List>
+            {frequentlyPurchasedTogether.map((relatedItem) => (
+              <ListItem key={relatedItem.id} alignItems='flex-start'>
+                <ListItemAvatar>
+                  <Avatar
+                    src={relatedItem.image}
+                    alt={relatedItem.title}
+                    variant='square'
+                    sx={{ width: 80, height: 80 }}
+                  />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={relatedItem.title}
+                  secondary='Click to view details'
                 />
-              </ListItemAvatar>
-              <ListItemText
-                primary={relatedItem.title}
-                secondary='Click to view details'
-              />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
-    </Container>
+              </ListItem>
+            ))}
+          </List>
+        </Box>
+      </Container>
+    </div>
   );
 };
 

@@ -16,9 +16,10 @@ class ApiService {
       (config) => {
         // Add authentication tokens or other headers here
         console.log('Request:', config);
+
         return config;
       },
-      (error) => {
+      (error: Error) => {
         return Promise.reject(error);
       },
     );
@@ -26,8 +27,9 @@ class ApiService {
     // Intercept responses to handle errors globally
     this.axiosInstance.interceptors.response.use(
       (response) => response,
-      (error) => {
+      (error: Error) => {
         console.error('Response error:', error);
+
         return Promise.reject(error);
       },
     );
@@ -43,6 +45,7 @@ class ApiService {
       params,
       ...config,
     });
+
     return response.data;
   }
 
@@ -57,6 +60,7 @@ class ApiService {
       data,
       config,
     );
+
     return response.data;
   }
 
@@ -71,6 +75,7 @@ class ApiService {
       data,
       config,
     );
+
     return response.data;
   }
 
@@ -80,6 +85,7 @@ class ApiService {
       url,
       config,
     );
+
     return response.data;
   }
 
@@ -94,6 +100,7 @@ class ApiService {
       data,
       config,
     );
+
     return response.data;
   }
 }

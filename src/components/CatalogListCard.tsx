@@ -1,15 +1,16 @@
-import React from 'react';
 import {
   Button,
-  Typography,
   Card,
+  CardActions,
   CardContent,
   CardMedia,
-  CardActions,
+  Grid2,
+  Typography,
 } from '@mui/material';
-import { Grid2 } from '@mui/material';
-import { Item } from '@/models';
 import { useRouter } from 'next/navigation';
+import React from 'react';
+
+import { Item } from '@/models';
 
 interface CatalogProps {
   item: Item;

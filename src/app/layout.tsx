@@ -1,11 +1,14 @@
+import './globals.css';
+
+import { ThemeProvider } from '@mui/material/styles';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import './globals.css';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './theme';
-import Header from '../components/Header';
+import React from 'react';
+
 import Footer from '../components/Footer';
+import Header from '../components/Header';
+import theme from './theme';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',

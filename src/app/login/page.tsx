@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
 import {
+  Alert,
+  Box,
+  Button,
   Container,
   TextField,
-  Button,
   Typography,
-  Box,
-  Alert,
 } from '@mui/material';
+import React, { useState } from 'react';
+
 import UserService from '../../services/userService';
 
 const Login: React.FC = () => {
@@ -56,7 +57,9 @@ const Login: React.FC = () => {
             color='primary'
             fullWidth
             sx={{ mt: 2 }}
-            onClick={handleLogin}
+            onClick={() => {
+              handleLogin().catch((err) => console.error(err));
+            }}
           >
             Login
           </Button>

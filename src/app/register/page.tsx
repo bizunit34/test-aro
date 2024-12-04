@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
 import {
+  Alert,
+  Box,
+  Button,
   Container,
   TextField,
-  Button,
   Typography,
-  Box,
-  Alert,
 } from '@mui/material';
-import UserService from '../../services/userService';
 import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+
+import UserService from '../../services/userService';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
@@ -24,7 +25,7 @@ const Register: React.FC = () => {
       await UserService.signUp({ name, email, password });
       setSuccess(true);
       setTimeout(() => {
-        router.push('/login'); // Redirect to login page after sign-up
+        router.push('/login').catch((err) => console.error(err)); // Redirect to login page after sign-up
       }, 2000);
     } catch (err) {
       console.error('Error: ', err);
@@ -72,8 +73,10 @@ const Register: React.FC = () => {
             color='primary'
             fullWidth
             sx={{ mt: 2 }}
-            onClick={handleSignUp}
-          >
+            onClick={() => {
+              handleSignUp().catch((err) => console.error(err));
+            }
+            }>
             Sign Up
           </Button>
         </Box>

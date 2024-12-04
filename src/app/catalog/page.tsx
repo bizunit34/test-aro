@@ -1,9 +1,12 @@
+import React from 'react';
+
 import { Item } from '@/models';
-import CatalogList from '../../components/CatalogList';
 import ItemService from '@/services/itemService';
 
-export default async function Catalog() {
-  const items: Array<Item> = await ItemService.getItems();
+import CatalogList from '../../components/CatalogList';
+
+export default function Catalog() {
+  const items: Array<Item> = ItemService.getItems();
 
   return <CatalogList items={items} itemsPerPage={6} />;
 }

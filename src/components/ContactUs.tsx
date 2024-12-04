@@ -1,23 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
 import {
   Box,
   Button,
+  Checkbox,
+  Chip,
   Container,
+  FormControl,
   Grid,
+  InputLabel,
+  ListItemText,
+  MenuItem,
+  OutlinedInput,
+  Select,
+  SelectChangeEvent,
   TextField,
   Typography,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-  OutlinedInput,
-  Checkbox,
-  ListItemText,
-  Chip,
-  SelectChangeEvent,
 } from '@mui/material';
+import React, { useState } from 'react';
 
 const services = [
   'Member Pricing for oPackaging & Products',
@@ -103,7 +103,7 @@ const ContactUs: React.FC = () => {
                 input={<OutlinedInput label='Services' />}
                 renderValue={(selected) => (
                   <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {(selected as string[]).map((value) => (
+                    {selected.map((value) => (
                       <Chip key={value} label={value} />
                     ))}
                   </Box>

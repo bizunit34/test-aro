@@ -67,11 +67,15 @@ const ItemService = {
       image: 'https://via.placeholder.com/150',
     },
   ],
-  getItems: async (): Promise<Array<Item>> => {
+  getItems: (): Array<Item> => {
     return ItemService.items;
   },
 
-  getItem: async (itemId: number): Promise<Item | undefined> => {
+  getItem: (itemId: number | undefined): Item | undefined => {
+    if (itemId == null) {
+      return;
+    }
+
     return ItemService.items.find((el) => el.id === itemId);
   },
 };
