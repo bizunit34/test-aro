@@ -19,8 +19,9 @@ const Register: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const router = useRouter();
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (): Promise<void> => {
     setError(null); // Clear any previous error
+
     try {
       await UserService.signUp({ name, email, password });
       setSuccess(true);

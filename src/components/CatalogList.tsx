@@ -25,7 +25,7 @@ const CatalogList: React.FC<CatalogProps> = ({ items, itemsPerPage = 6 }) => {
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number,
-  ) => {
+  ): void => {
     setCurrentPage(page);
   };
 

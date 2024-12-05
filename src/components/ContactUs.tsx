@@ -35,11 +35,11 @@ const ContactUs: React.FC = () => {
   const [notes, setNotes] = useState('');
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
 
-  const handleServiceChange = (event: SelectChangeEvent<string[]>) => {
+  const handleServiceChange = (event: SelectChangeEvent<string[]>): void => {
     setSelectedServices(event.target.value as string[]);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     console.log({
       name,

@@ -2,7 +2,7 @@ import { Container } from '@mui/material';
 import React from 'react';
 
 import { Item } from '@/models';
-import { Pacdora as PacdoraModel } from '@/models/pacdora/pacdora';
+import { PacdoraModel } from '@/models/pacdora/pacdora.model';
 import PacdoraService from '@/services/pacdoraService';
 
 const pacdoraService: PacdoraService = new PacdoraService();
@@ -158,7 +158,7 @@ class CalcResultItem {
   public count: number;
   public minFee: number;
   public price: number;
-  public unit: number;
+  public unit: string;
   public fee: number;
   public constructor(
     name: string,
@@ -166,7 +166,7 @@ class CalcResultItem {
     count: number,
     minFee: number,
     price: number,
-    unit: number,
+    unit: string,
     fee: number,
   ) {
     this.name = name;
@@ -211,7 +211,7 @@ class SimpleQuotation {
     this.config = config;
   }
 
-  public makeQuotation(params: Params) {
+  public makeQuotation(params: Params): CalcResult {
     this.params = params;
     const resItems = [
       this.feePaper(),
@@ -233,10 +233,13 @@ class SimpleQuotation {
     count: number,
   ): RangeItem | undefined {
     const cfg: Array<SimpleQuotationItem> = this.config?.[type];
+
     if (!cfg) throw new Error();
     const c = cfg.find((item) => item.name === name);
+
     if (!c) throw new Error();
     let config: RangeItem | undefined;
+
     for (const r of c.range) {
       if (r.minCount <= count && r.maxCount > count) {
         config = r;
@@ -249,7 +252,7 @@ class SimpleQuotation {
   public makeQuotationByArea(
     { area, count }: { area: number; count: number },
     config: RangeItem | undefined,
-  ) {
+  ): CalcResultItem | undefined {
     if (config == null) {
       return;
     }
@@ -257,7 +260,7 @@ class SimpleQuotation {
     const fee = Math.max(area * config.price * count, config.minFee || 0);
 
     return new CalcResultItem(
-      config.name,
+      'Name',
       'area',
       count,
       config.minFee,
@@ -269,8 +272,8 @@ class SimpleQuotation {
 
   public makeQuotationByCount(
     { count }: { count: number },
-    config: CalcResultItem | RangeItem | undefined,
-  ) {
+    config: RangeItem | undefined,
+  ): CalcResultItem | undefined {
     if (config == null) {
       return;
     }
@@ -278,7 +281,7 @@ class SimpleQuotation {
     const fee = Math.max(config.price * count, config.minFee || 0);
 
     return new CalcResultItem(
-      config.name,
+      'testName',
       'count',
       count,
       config.minFee,
@@ -288,7 +291,7 @@ class SimpleQuotation {
     );
   }
 
-  public feePaper() {
+  public feePaper(): CalcResultItem | undefined {
     if (this.params == null) {
       return;
     }
@@ -306,13 +309,17 @@ class SimpleQuotation {
     );
   }
 
-  public feePrint() {
+  public feePrint(): CalcResultItem | undefined {
     if (this.params == null) {
       return;
     }
 
     const { count, knifeX, knifeY, printName, printSide } = this.params;
-    const cfg = this.getQuotationConfig('print', printName, count);
+    const cfg: RangeItem | undefined = this.getQuotationConfig(
+      'print',
+      printName,
+      count,
+    );
 
     return this.makeQuotationByArea(
       { area: (knifeX * knifeY) / 1e6, count: count * printSide },
@@ -320,13 +327,17 @@ class SimpleQuotation {
     );
   }
 
-  public feeSurface() {
+  public feeSurface(): CalcResultItem | undefined {
     if (this.params == null) {
       return;
     }
 
     const { count, knifeX, knifeY, surfaceName } = this.params;
-    const cfg = this.getQuotationConfig('surface', surfaceName, count);
+    const cfg: RangeItem | undefined = this.getQuotationConfig(
+      'surface',
+      surfaceName,
+      count,
+    );
 
     return this.makeQuotationByArea(
       { area: (knifeX * knifeY) / 1e6, count },
@@ -334,7 +345,7 @@ class SimpleQuotation {
     );
   }
 
-  public feeCut() {
+  public feeCut(): CalcResultItem | undefined {
     if (this.params == null) {
       return;
     }
@@ -350,14 +361,14 @@ class SimpleQuotation {
   }
 }
 
-function getQueryValue(queryName: string) {
+function getQueryValue(queryName: string): string | null {
   const paramsString = window.location.search.substring(1);
   const params = new URLSearchParams(paramsString);
 
   return params.get(queryName);
 }
 
-function makeQuotationForBox() {
+function makeQuotationForBox(): void {
   const dimension: HTMLInputElement | null =
     document.querySelector('#dimension');
   const material: HTMLInputElement | null = document.querySelector('#material');
@@ -386,6 +397,7 @@ function makeQuotationForBox() {
 
   const quotation = new SimpleQuotation(PRICE_CONFIG);
   let faces = 0;
+
   if (print.value === 'inside' || print.value === 'outside') {
     faces = 1;
   } else if (print.value === 'both') {
@@ -402,6 +414,7 @@ function makeQuotationForBox() {
     surfaceName: finishing.value,
     cutName: 'default',
   });
+
   if (result) {
     const price: Element | null = document.querySelector('#price-box');
 
@@ -421,7 +434,7 @@ function makeQuotationForBox() {
   }
 }
 
-function makeQuotationForMockup() {
+function makeQuotationForMockup(): void {
   const number: HTMLInputElement | null = document.querySelector('#number');
 
   if (!number?.value) {
@@ -443,16 +456,17 @@ function makeQuotationForMockup() {
     `;
 }
 
-function allowMakeQuotation() {
-  const modelId = getQueryValue('modelId');
-  if (!isNumber(modelId) || Number(modelId) >= 400000) {
+function allowMakeQuotation(): boolean {
+  const modelId: string | null = getQueryValue('modelId');
+
+  if (modelId == null || !isNumber(+modelId) || Number(modelId) >= 400000) {
     return false;
   }
 
   return true;
 }
 
-function makeQuotation() {
+function makeQuotation(): void {
   if (allowMakeQuotation()) {
     return makeQuotationForBox();
   } else {
@@ -461,10 +475,11 @@ function makeQuotation() {
 }
 
 // Transition animation method for the slide switch component
-function onSwitch2DAnd3D(type: string) {
+function onSwitch2DAnd3D(type: string): void {
   const switchItems = document.querySelectorAll('.switch-item');
   const boxInfo: HTMLInputElement | null =
     document.querySelector('.box-info-slider');
+
   if (type === '3d') {
     switchItems[0].className = 'switch-item active';
     switchItems[1].className = 'switch-item';
@@ -492,41 +507,51 @@ function onSwitch2DAnd3D(type: string) {
   }
 }
 
-function openPacdora(ratio: number) {
-  Pacdora.collapse('d3', ratio);
+function openPacdora(ratio: number): void {
+  Pacdora?.collapse('d3', ratio);
   const pointer: HTMLInputElement | null = document.querySelector('.pointer');
+
   if (pointer != null) {
     pointer.style.left = `${ratio * 100}%`;
   }
   const selected: HTMLInputElement | null =
     document.querySelector('.slider-selecter');
+
   if (selected != null) {
     selected.style.width = `${ratio * 100}%`;
   }
 }
 
 // Control methods for the Slider component
-function onSliderDown(e: React.PointerEvent<HTMLDivElement>) {
+function onSliderDown(e: HTMLDivElement): void {
   const parentBounding = (
-    e as unknown as HTMLElement
-  ).parentNode?.getBoundingClientRect();
-  document.onpointermove = (ev) => {
+    e.parentNode as HTMLDivElement | undefined
+  )?.getBoundingClientRect();
+  document.onpointermove = (ev): void => {
     ev.preventDefault();
     const { clientX } = ev;
-    const len = clientX - parentBounding.left;
-    let ratio = len / parentBounding.width;
+    const len = clientX - (parentBounding?.left ?? 0);
+    let ratio = len / (parentBounding?.width ?? 0);
+
     if (ratio < 0) {
       ratio = 0;
     }
+
     if (ratio > 1) {
       ratio = 1;
     }
-    Pacdora.collapse('d3', ratio);
+    Pacdora?.collapse('d3', ratio);
     e.style.left = `${ratio * 100}%`;
-    const selected = e.parentNode.querySelector('.slider-selecter');
+    const selected: HTMLElement | null | undefined =
+      e.parentNode?.querySelector('.slider-selecter');
+
+    if (selected == null) {
+      return;
+    }
+
     selected.style.width = `${ratio * 100}%`;
   };
-  document.onpointerup = () => {
+  document.onpointerup = (): void => {
     document.onpointermove = null;
     document.onpointerup = null;
   };
@@ -538,32 +563,35 @@ function onSliderDown(e: React.PointerEvent<HTMLDivElement>) {
  * @param {*} e
  * @returns
  */
-function onChangeDimension(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangeDimension(e: HTMLSelectElement): void {
   let value = e.value;
+
   if (value === '') {
     return;
   }
 
   if (value === 'customize') {
-    const number = prompt(
+    const number: string | null = prompt(
       'Please input your dimension in the format of 315*202*62',
       '315*202*62',
     );
-    const sizes = number.split('*');
-    if (sizes.length !== 3) {
+    const sizes: Array<string> | undefined = number?.split('*');
+
+    if (number == null || sizes == null || sizes.length !== 3) {
       return;
     }
 
     const length = Number(sizes[0]);
     const width = Number(sizes[1]);
     const height = Number(sizes[2]);
+
     if (!isNumber(length) || !isNumber(width) || !isNumber(height)) {
       e.selectedIndex = 0;
 
       return;
     }
 
-    const newOption = document.createElement('option');
+    const newOption: HTMLOptionElement = document.createElement('option');
     newOption.value = number;
     newOption.text = number + 'mm';
 
@@ -573,7 +601,7 @@ function onChangeDimension(e: React.ChangeEvent<HTMLSelectElement>) {
   }
 
   const size = value.split('*');
-  Pacdora.setSize({
+  Pacdora?.setSize({
     length: Number(size[0]),
     width: Number(size[1]),
     height: Number(size[2]),
@@ -587,12 +615,13 @@ function onChangeDimension(e: React.ChangeEvent<HTMLSelectElement>) {
  * updates the project via the Pacdora.setMaterial method.
  * @param {*} e
  */
-function onChangeMaterial(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangeMaterial(e: HTMLSelectElement): void {
   const value = e.value;
+
   if (value !== '') {
     switch (value) {
       case 'White card board':
-        Pacdora.setMaterial({
+        Pacdora?.setMaterial({
           name: 'White card board',
           image:
             '//cdn.pacdora.com/science/image/94e8078a-9931-42cd-97ed-57883bd88085.png',
@@ -600,7 +629,7 @@ function onChangeMaterial(e: React.ChangeEvent<HTMLSelectElement>) {
         });
         break;
       case 'E-flute paper':
-        Pacdora.setMaterial({
+        Pacdora?.setMaterial({
           name: 'E-flute paper',
           image:
             '//cdn.pacdora.com/science/image/00e45c0b-9cf7-4d39-bdc8-82bb202909d9.png',
@@ -608,7 +637,7 @@ function onChangeMaterial(e: React.ChangeEvent<HTMLSelectElement>) {
         });
         break;
       case 'Kraft paper':
-        Pacdora.setMaterial({
+        Pacdora?.setMaterial({
           name: 'Kraft paper',
           image: '//cdn.pacdora.com/science/image/material_kraft.png',
           async: true,
@@ -624,10 +653,11 @@ function onChangeMaterial(e: React.ChangeEvent<HTMLSelectElement>) {
  * updates the project via the Pacdora.setThickness method.
  * @param {*} e
  */
-function onChangeThickness(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangeThickness(e: HTMLSelectElement): void {
   const value = e.value;
+
   if (value !== '') {
-    Pacdora.setThickness({
+    Pacdora?.setThickness({
       value: Number(value),
       async: true,
     });
@@ -635,19 +665,23 @@ function onChangeThickness(e: React.ChangeEvent<HTMLSelectElement>) {
   makeQuotation();
 }
 
-function onChangePrint(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangePrint(e: React.ChangeEvent<HTMLSelectElement>): void {
+  console.log('event: ', e);
   makeQuotation();
 }
 
-function onChangeFinishing(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangeFinishing(e: React.ChangeEvent<HTMLSelectElement>): void {
+  console.log('event: ', e);
   makeQuotation();
 }
 
-function onChangeNumber(e: React.ChangeEvent<HTMLSelectElement>) {
+function onChangeNumber(e: HTMLSelectElement): void {
   const value = e.value;
+
   if (value === 'customize') {
-    const number = prompt('Please input your number');
-    if (!isNumber(number) || !number) {
+    const number: string | null = prompt('Please input your number');
+
+    if (number == null || !isNumber(+number)) {
       e.selectedIndex = 0;
 
       return;
@@ -664,9 +698,10 @@ function onChangeNumber(e: React.ChangeEvent<HTMLSelectElement>) {
   makeQuotation();
 }
 
-function onBuyClick() {
+function onBuyClick(): void {
   makeQuotation();
   const message = document.querySelector('.toast-message');
+
   if (message) {
     message.className = 'toast-message active';
     setTimeout(() => {
@@ -689,7 +724,7 @@ function onBuyClick() {
 //   document.getElementById('count').innerText = cur + count;
 // }
 
-function isNumber(content: number) {
+function isNumber(content: number): boolean {
   return !isNaN(content);
 }
 
@@ -712,7 +747,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
                   <div
                     className='pointer'
                     onPointerDown={(e: React.PointerEvent<HTMLDivElement>) =>
-                      onSliderDown(e)
+                      onSliderDown(e as unknown as HTMLDivElement)
                     }
                   ></div>
                 </div>
@@ -768,7 +803,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
             Dimension
           </div>
           <div className='selector-box'>
-            <select onChange={(e) => onChangeDimension(e)} id='dimension'>
+            <select
+              onChange={(e) =>
+                onChangeDimension(e as unknown as HTMLSelectElement)
+              }
+              id='dimension'
+            >
               <option value=''>Choose the dimension</option>
               <option value='315*202*62'>315*202*62mm</option>
               <option value='150*100*50'>150*100*50mm</option>
@@ -780,7 +820,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
             Material
           </div>
           <div className='selector-box'>
-            <select onChange={(e) => onChangeMaterial(e)} id='material'>
+            <select
+              onChange={(e) =>
+                onChangeMaterial(e as unknown as HTMLSelectElement)
+              }
+              id='material'
+            >
               <option value=''>Choose the material</option>
               <option value='White card board'>White card board</option>
               <option value='E-flute paper'>E-flute paper</option>
@@ -791,7 +836,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
             Thickness
           </div>
           <div className='selector-box'>
-            <select onChange={(e) => onChangeThickness(e)} id='thickness'>
+            <select
+              onChange={(e) =>
+                onChangeThickness(e as unknown as HTMLSelectElement)
+              }
+              id='thickness'
+            >
               <option value=''>Choose the thickness</option>
               <option value='1.5'>1.5mm</option>
               <option value='1'>1mm</option>
@@ -840,7 +890,12 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
             <div>
               <div className='sub-title mt30'>Quantity</div>
               <div className='selector-box'>
-                <select onChange={(e) => onChangeNumber(e)} id='number'>
+                <select
+                  onChange={(e) =>
+                    onChangeNumber(e as unknown as HTMLSelectElement)
+                  }
+                  id='number'
+                >
                   <option value='500' selected={true}>
                     500
                   </option>

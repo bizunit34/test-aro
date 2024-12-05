@@ -1,8 +1,8 @@
-import { Pacdora } from '@/models/pacdora/pacdora';
+import { PacdoraModel } from '@/models';
 
 class PacdoraService {
   private _pacdoraServiceSingleton: PacdoraService | undefined;
-  public Pacdora: Pacdora | undefined;
+  public Pacdora: PacdoraModel | undefined;
 
   public constructor() {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -16,7 +16,25 @@ class PacdoraService {
     }
   }
 
-  public getPacdora(): Pacdora | undefined {
+  public async initializePacdora(): Promise<void> {
+    if (this.Pacdora == null) {
+      console.error('There was an issue with loading the Pacdora script.');
+
+      return;
+    }
+
+    await this.Pacdora.init({
+      userId: 'Your customer ID',
+      appId: 'Your app ID',
+      isDelay: true,
+      theme: '#3300FF',
+    });
+    const userInfo: Record<string, string | number> =
+      await this.Pacdora.getUserInfo();
+    console.log('user info:', userInfo);
+  }
+
+  public getPacdora(): PacdoraModel | undefined {
     return this.Pacdora;
   }
 }

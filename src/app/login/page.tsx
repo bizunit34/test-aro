@@ -15,8 +15,9 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const handleLogin = async () => {
+  const handleLogin = async (): Promise<void> => {
     setError(null); // Clear any previous error
+
     try {
       const response = await UserService.login({ email, password });
       console.log('Login successful:', response);
@@ -58,7 +59,7 @@ const Login: React.FC = () => {
             fullWidth
             sx={{ mt: 2 }}
             onClick={() => {
-              handleLogin().catch((err) => console.error(err));
+              handleLogin().catch((err: Error) => console.error(err));
             }}
           >
             Login

@@ -18,7 +18,7 @@ interface CatalogProps {
 
 const CatalogListCard: React.FC<CatalogProps> = ({ item }) => {
   const router = useRouter();
-  const handleNavigation = (route: string) => {
+  const handleNavigation = (route: string): void => {
     router.push(route);
   };
 
