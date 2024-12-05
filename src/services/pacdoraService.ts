@@ -1,30 +1,24 @@
-import axios from 'axios';
+import { Pacdora } from '@/models/pacdora/pacdora';
 
-interface LoginPayload {
-  email: string;
-  password: string;
+class PacdoraService {
+  private _pacdoraServiceSingleton: PacdoraService | undefined;
+  public Pacdora: Pacdora | undefined;
+
+  public constructor() {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore -- This is added via script and thus cannot be tracked until here
+    if (window.Pacdora != null) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.Pacdora = window.Pacdora;
+    }
+  }
+
+  public getPacdora(): Pacdora | undefined {
+    return this.Pacdora;
+  }
 }
-
-interface LoginResponse {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
-}
-
-const API_BASE_URL = 'https://api.example.com'; // Replace with your API base URL
-
-const PacdoraService = {
-  login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const response: { data: LoginResponse } = await axios.post(
-      `${API_BASE_URL}/login`,
-      payload,
-    );
-
-    return response.data;
-  },
-};
 
 export default PacdoraService;

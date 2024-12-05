@@ -29,6 +29,7 @@
     "import/first": "error",
     "import/newline-after-import": "error",
     "import/no-duplicates": "error",
-    "keyword-spacing": ["error", { "before": true, "after": true }]
+    "keyword-spacing": ["error", { "before": true, "after": true }],
+    "@typescript-eslint/explicit-member-accessibility": "error"
   }
 }

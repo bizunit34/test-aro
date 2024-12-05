@@ -1,7 +1,12 @@
-import { Container, SelectChangeEvent } from '@mui/material';
+import { Container } from '@mui/material';
 import React from 'react';
 
 import { Item } from '@/models';
+import { Pacdora as PacdoraModel } from '@/models/pacdora/pacdora';
+import PacdoraService from '@/services/pacdoraService';
+
+const pacdoraService: PacdoraService = new PacdoraService();
+const Pacdora: PacdoraModel | undefined = pacdoraService.getPacdora();
 
 const PRICE_CONFIG: Record<string, Array<SimpleQuotationItem>> = {
   paper: [
@@ -132,7 +137,7 @@ class RangeItem {
   public minFee: number;
   public price: number;
   public unit: string;
-  constructor(
+  public constructor(
     minCount: number,
     maxCount: number,
     minFee: number,
@@ -155,7 +160,7 @@ class CalcResultItem {
   public price: number;
   public unit: number;
   public fee: number;
-  constructor(
+  public constructor(
     name: string,
     mode: string,
     count: number,
@@ -177,7 +182,7 @@ class CalcResultItem {
 class CalcResult {
   public fee: number;
   public list: unknown;
-  constructor(fee: number, list: unknown) {
+  public constructor(fee: number, list: unknown) {
     this.fee = fee;
     this.list = list;
   }
@@ -202,11 +207,11 @@ interface Params {
 class SimpleQuotation {
   public config: Record<string, Array<SimpleQuotationItem>>;
   public params?: Params;
-  constructor(config: Record<string, Array<SimpleQuotationItem>>) {
+  public constructor(config: Record<string, Array<SimpleQuotationItem>>) {
     this.config = config;
   }
 
-  makeQuotation(params: Params) {
+  public makeQuotation(params: Params) {
     this.params = params;
     const resItems = [
       this.feePaper(),
@@ -222,7 +227,7 @@ class SimpleQuotation {
     return new CalcResult(totalFee, resItems);
   }
 
-  getQuotationConfig(
+  public getQuotationConfig(
     type: string,
     name: string,
     count: number,
@@ -241,7 +246,7 @@ class SimpleQuotation {
     return config;
   }
 
-  makeQuotationByArea(
+  public makeQuotationByArea(
     { area, count }: { area: number; count: number },
     config: RangeItem | undefined,
   ) {
@@ -262,7 +267,7 @@ class SimpleQuotation {
     );
   }
 
-  makeQuotationByCount(
+  public makeQuotationByCount(
     { count }: { count: number },
     config: CalcResultItem | RangeItem | undefined,
   ) {
@@ -283,7 +288,7 @@ class SimpleQuotation {
     );
   }
 
-  feePaper() {
+  public feePaper() {
     if (this.params == null) {
       return;
     }
@@ -301,7 +306,7 @@ class SimpleQuotation {
     );
   }
 
-  feePrint() {
+  public feePrint() {
     if (this.params == null) {
       return;
     }
@@ -315,7 +320,7 @@ class SimpleQuotation {
     );
   }
 
-  feeSurface() {
+  public feeSurface() {
     if (this.params == null) {
       return;
     }
@@ -329,7 +334,7 @@ class SimpleQuotation {
     );
   }
 
-  feeCut() {
+  public feeCut() {
     if (this.params == null) {
       return;
     }
@@ -670,29 +675,25 @@ function onBuyClick() {
   }
 }
 
-function onStep(count: number): void {
-  if (document.getElementById('count')?.innerText == null) {
-    return;
-  }
+// function onStep(count: number): void {
+//   if (document.getElementById('count')?.innerText == null) {
+//     return;
+//   }
 
-  const cur: number = Number(document.getElementById('count').innerText);
+//   const cur: number = Number(document.getElementById('count').innerText);
 
-  if (cur + count <= 0) {
-    return;
-  }
+//   if (cur + count <= 0) {
+//     return;
+//   }
 
-  document.getElementById('count').innerText = cur + count;
-}
+//   document.getElementById('count').innerText = cur + count;
+// }
 
-function isNumber(content: unknown) {
+function isNumber(content: number) {
   return !isNaN(content);
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = (
-  {
-    //   item,
-  },
-) => {
+const ItemDetails: React.FC<ItemDetailsProps> = () => {
   return (
     <Container maxWidth='md' sx={{ mt: 4 }}>
       <div className='box-info'>

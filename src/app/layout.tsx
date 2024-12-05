@@ -31,6 +31,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('here');
+
   return (
     <html lang='en'>
       <body
@@ -43,6 +45,11 @@ export default function RootLayout({
             <Footer />
           </ThemeProvider>
         </AppRouterCacheProvider>
+        <script
+          defer
+          type='application/javascript'
+          src='https://cdn.pacdora.com/Pacdora-v1.1.4.js'
+        ></script>
       </body>
     </html>
   );

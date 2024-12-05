@@ -3,7 +3,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 class ApiService {
   private axiosInstance: AxiosInstance;
 
-  constructor(baseURL: string) {
+  public constructor(baseURL: string) {
     this.axiosInstance = axios.create({
       baseURL,
       headers: {
@@ -36,7 +36,7 @@ class ApiService {
   }
 
   // Perform GET request
-  async get<T>(
+  public async get<T>(
     url: string,
     params?: Record<string, unknown>,
     config?: AxiosRequestConfig,
@@ -50,7 +50,7 @@ class ApiService {
   }
 
   // Perform POST request
-  async post<T>(
+  public async post<T>(
     url: string,
     data: unknown,
     config?: AxiosRequestConfig,
@@ -65,7 +65,7 @@ class ApiService {
   }
 
   // Perform PUT request
-  async put<T>(
+  public async put<T>(
     url: string,
     data: unknown,
     config?: AxiosRequestConfig,
@@ -80,7 +80,7 @@ class ApiService {
   }
 
   // Perform DELETE request
-  async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
+  public async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
     const response: AxiosResponse<T> = await this.axiosInstance.delete(
       url,
       config,
@@ -90,7 +90,7 @@ class ApiService {
   }
 
   // Perform PATCH request
-  async patch<T>(
+  public async patch<T>(
     url: string,
     data: unknown,
     config?: AxiosRequestConfig,
