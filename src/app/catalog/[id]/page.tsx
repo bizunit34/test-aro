@@ -1,22 +1,30 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import React from 'react';
 
 import { Item } from '@/models';
 import ItemService from '@/services/itemService';
+import PacdoraService from '@/services/pacdoraService';
 
 import ItemDetails from '../../../components/ItemDetails';
 
 const ItemDetailsPage: React.FC = () => {
-  const router = useRouter();
-  console.log('slug: ', router);
-  const itemId: number | undefined = 1;
-  const item: Item | undefined = ItemService.getItem(itemId);
+  const params = useParams();
+
+  if (params?.id == null) {
+    notFound();
+  }
+
+  const item: Item | undefined = ItemService.getItem(+params.id);
 
   if (item == null) {
-    throw new Error('Item not found.');
+    notFound();
   }
+
+  const pacdoraService: PacdoraService = PacdoraService.createPacdoraService();
+
+  pacdoraService.initializePacdora();
 
   const frequentlyPurchasedTogether = [
     {

@@ -1,10 +1,20 @@
 export interface PacdoraModel {
+  $on: (element: string, callback: () => void) => void;
   appId: 'string';
+  createScene: (options: {
+    id: number | undefined;
+    modelId: number;
+    templateId: number | undefined;
+    isShowLoading?: boolean;
+    doneBtn?: string;
+  }) => Promise<number>;
   init: (options: {
-    userId: string;
+    userId?: string;
     appId: string;
     isDelay: boolean;
     theme: string;
+    doneBtn: string;
+    localeResource: Record<string, string>;
   }) => Promise<number>;
   isInit: () => Promise<boolean>;
   isShowSave: string;

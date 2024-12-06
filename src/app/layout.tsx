@@ -31,8 +31,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>): React.JSX.Element {
-  console.log('here');
-
   return (
     <html lang='en'>
       <body

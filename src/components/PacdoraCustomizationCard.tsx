@@ -728,7 +728,7 @@ function isNumber(content: number): boolean {
   return !isNaN(content);
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = () => {
+const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
   return (
     <Container maxWidth='md' sx={{ mt: 4 }}>
       <div className='box-info'>
@@ -958,4 +958,4 @@ const ItemDetails: React.FC<ItemDetailsProps> = () => {
   );
 };
 
-export default ItemDetails;
+export default PacdoraCustomizationCard;
