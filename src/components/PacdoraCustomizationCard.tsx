@@ -1,9 +1,9 @@
 import { Container } from '@mui/material';
 import React from 'react';
 
-import { Item } from '@/models';
+import { ItemModel } from '@/models';
 import { PacdoraModel } from '@/models/pacdora/pacdora.model';
-import PacdoraService from '@/services/pacdoraService';
+import PacdoraService from '@/services/pacdora.service.ts';
 
 const pacdoraService: PacdoraService = new PacdoraService();
 const Pacdora: PacdoraModel | undefined = pacdoraService.getPacdora();
@@ -128,7 +128,7 @@ const PRICE_CONFIG: Record<string, Array<SimpleQuotationItem>> = {
 };
 
 interface ItemDetailsProps {
-  item: Item;
+  item: ItemModel;
 }
 
 class RangeItem {

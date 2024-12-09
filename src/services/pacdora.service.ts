@@ -270,8 +270,8 @@ class PacdoraService {
               content += `<pre><code class="${
                 tip.content[j].codeLang ?? 'language-html'
               }">${tip.content[j].value
-                .replace(/\</g, '&lt;')
-                .replace(/\>/g, '&gt;')}</code></pre>`;
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')}</code></pre>`;
               break;
             case 'image':
               content += `<img src="${tip.content[j].value}"/>`;

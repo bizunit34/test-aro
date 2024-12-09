@@ -1,6 +1,7 @@
-export interface Item {
-  id: number;
-  title: string;
+import { CoreModel } from './core.model';
+
+export interface ItemModel extends CoreModel {
+  name: string;
   description?: string;
   image: string;
   price?: number;

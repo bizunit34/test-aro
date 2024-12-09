@@ -15,13 +15,13 @@ import {
 } from '@mui/material';
 import React from 'react';
 
-import { Item } from '@/models';
+import { ItemModel } from '@/models';
 
 import CatalogListCard from './CatalogListCard';
 
 interface ItemDetailsProps {
-  item: Item;
-  frequentlyPurchasedTogether: Array<Item>;
+  item: ItemModel;
+  frequentlyPurchasedTogether: Array<ItemModel>;
 }
 
 const ItemDetails: React.FC<ItemDetailsProps> = ({
@@ -33,7 +33,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
       <Container maxWidth='md' sx={{ mt: 4 }} className='flex'>
         {/* Item Image and Title */}
         <div style={{ width: '300px', marginRight: '20px' }}>
-          <CatalogListCard key={item.id} item={item} />
+          <CatalogListCard key={item._id} item={item} />
         </div>
 
         {/* Item Details Table */}
@@ -71,17 +71,17 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
           </Typography>
           <List>
             {frequentlyPurchasedTogether.map((relatedItem) => (
-              <ListItem key={relatedItem.id} alignItems='flex-start'>
+              <ListItem key={relatedItem._id} alignItems='flex-start'>
                 <ListItemAvatar>
                   <Avatar
                     src={relatedItem.image}
-                    alt={relatedItem.title}
+                    alt={relatedItem.name}
                     variant='square'
                     sx={{ width: 80, height: 80 }}
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={relatedItem.title}
+                  primary={relatedItem.name}
                   secondary='Click to view details'
                 />
               </ListItem>

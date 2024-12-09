@@ -1,2 +1,2 @@
-export * from './item';
+export * from './objects';
 export * from './pacdora';

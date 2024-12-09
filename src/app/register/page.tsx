@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
-import UserService from '../../services/userService';
+import UserService from '../../services/user.service';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');

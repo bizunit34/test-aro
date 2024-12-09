@@ -3,12 +3,12 @@
 import { Box, Container, Grid2, Pagination, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import { Item } from '@/models';
+import { ItemModel } from '@/models';
 
 import CatalogListCard from './CatalogListCard';
 
 interface CatalogProps {
-  items: Array<Item>;
+  items: Array<ItemModel>;
   itemsPerPage?: number;
 }
 

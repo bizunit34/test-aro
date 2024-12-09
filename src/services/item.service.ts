@@ -1,4 +1,4 @@
-import { Item } from '@/models';
+import { ItemModel } from '@/models';
 
 const ItemService = {
   items: [
@@ -67,11 +67,11 @@ const ItemService = {
       image: 'https://via.placeholder.com/150',
     },
   ],
-  getItems: (): Array<Item> => {
+  getItems: (): Array<ItemModel> => {
     return ItemService.items;
   },
 
-  getItem: (itemId: number | undefined): Item | undefined => {
+  getItem: (itemId: number | undefined): ItemModel | undefined => {
     if (itemId == null) {
       return;
     }

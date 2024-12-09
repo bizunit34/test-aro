@@ -10,10 +10,10 @@ import {
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
-import { Item } from '@/models';
+import { ItemModel } from '@/models';
 
 interface CatalogProps {
-  item: Item;
+  item: ItemModel;
 }
 
 const CatalogListCard: React.FC<CatalogProps> = ({ item }) => {
