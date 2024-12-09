@@ -36,7 +36,7 @@ const CatalogList: React.FC<CatalogProps> = ({ items, itemsPerPage = 6 }) => {
       </Typography>
       <Grid2 container spacing={3}>
         {currentItems.map((item) => (
-          <CatalogListCard key={item.id} item={item} />
+          <CatalogListCard key={item._id} item={item} />
         ))}
       </Grid2>
       <Box mt={4} display='flex' justifyContent='center'>

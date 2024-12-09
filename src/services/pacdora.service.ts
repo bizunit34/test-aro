@@ -189,6 +189,11 @@ class PacdoraService {
         }
         tipUIEle.onclick = (e): void => {
           e.stopPropagation();
+
+          if (ele.dataset.uiTip == null) {
+            return;
+          }
+
           this.showApiTip(ele.dataset.uiTip);
         };
         tipUIEle.onmouseenter = (e): void => {
@@ -217,21 +222,30 @@ class PacdoraService {
         const tips = ApiTips[tipName];
         toastEle.innerHTML = `Check the API of ${tips['name']}`;
 
-        if (ele.parentNode.dataset.position === 'bottom') {
+        if (
+          (ele.parentNode as HTMLElement | undefined)?.dataset.position ===
+          'bottom'
+        ) {
           toastEle.className = 'toast bottom';
-        } else if (ele.parentNode.dataset.position === 'right') {
+        } else if (
+          (ele.parentNode as HTMLElement | undefined)?.dataset.position ===
+          'right'
+        ) {
           toastEle.className = 'toast right';
         }
 
         ele.appendChild(toastEle);
       }
     } else {
-      const toastEle = ele.querySelector('.toast');
-      toastEle.parentNode?.removeChild(toastEle);
+      const toastEle: HTMLElement | null = ele.querySelector('.toast');
+
+      if (toastEle != null) {
+        toastEle.parentNode?.removeChild(toastEle);
+      }
     }
   }
 
-  public showApiTip(tipName): void {
+  public showApiTip(tipName: string): void {
     const dialog = document.createElement('div');
     Object.assign(dialog.style, {
       width: '50%',
@@ -249,11 +263,20 @@ class PacdoraService {
     });
     dialog.className = 'api-tip-dialog';
     const mask = document.createElement('div');
-    mask.style.zIndex = 999999998;
+    mask.style.zIndex = '999999998';
     mask.className = 'mask';
     document.body.appendChild(dialog);
     document.body.appendChild(mask);
-    const tips = ApiTips[tipName].tips;
+    const tips:
+      | Array<{
+          title: string;
+          content: Array<{
+            type: string;
+            codeLang?: string;
+            value: string;
+          }>;
+        }>
+      | undefined = ApiTips[tipName].tips;
     let targetHtml = '';
 
     if (tips) {
@@ -297,7 +320,8 @@ class PacdoraService {
     </div>
   `;
 
-    hljs.highlightAll();
+    // comes from the demo instance and I'm not sure what this does just yet
+    // hljs.highlightAll();
   }
 }
 
