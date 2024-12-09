@@ -92,6 +92,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
         <Alert
           onClose={handleClose}
           severity={toastOptions?.severity || 'info'}
+          variant='filled'
           sx={{ width: '100%' }}
         >
           {toastOptions?.message}

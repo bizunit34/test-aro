@@ -24,6 +24,13 @@ export default function Home(): React.JSX.Element {
   };
   const handleClick3 = (): void => {
     showToast({
+      message: 'This is an warn message!',
+      severity: 'warning',
+      duration: 4000,
+    });
+  };
+  const handleClick4 = (): void => {
+    showToast({
       message: 'This is an error message!',
       severity: 'error',
       duration: 4000,
@@ -42,6 +49,9 @@ export default function Home(): React.JSX.Element {
             Show Info
           </Button>
           <Button variant='contained' color='primary' onClick={handleClick3}>
+            Show Warning
+          </Button>
+          <Button variant='contained' color='primary' onClick={handleClick4}>
             Show Error
           </Button>
         </div>
