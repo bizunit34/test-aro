@@ -1,4 +1,17 @@
-const ApiTips = {
+const ApiTips: Record<
+  string,
+  {
+    name: string;
+    tips: Array<{
+      title: string;
+      content: Array<{
+        type: string;
+        codeLang?: string;
+        value: string;
+      }>;
+    }>;
+  }
+> = {
   'model-list': {
     name: 'Listing all the models/boxes by category ID',
     tips: [
