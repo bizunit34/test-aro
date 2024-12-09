@@ -1,7 +1,22 @@
 'use client';
 
-import { Alert, Snackbar } from '@mui/material';
+import {
+  Alert,
+  Snackbar,
+  SnackbarCloseReason,
+  SnackbarOrigin,
+} from '@mui/material';
+import Grow, { GrowProps } from '@mui/material/Grow';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+
+export interface SnackbarMessage {
+  message: string;
+  key: number;
+}
+
+function GrowTransition(props: GrowProps): React.ReactElement {
+  return <Grow {...props} />;
+}
 
 // Define the type for the toast
 interface ToastOptions {
@@ -10,56 +25,82 @@ interface ToastOptions {
   duration?: number; // in milliseconds
 }
 
-// Context type
 interface ToastContextType {
   showToast: (options: ToastOptions) => void;
 }
 
-// Create Context
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-// Provider Component
 export const ToastProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const [snackPack, setSnackPack] = React.useState<readonly SnackbarMessage[]>(
+    [],
+  );
   const [open, setOpen] = useState(false);
-  const [toastOptions, setToastOptions] = useState<ToastOptions>({
+  const [toastOptions, setToastOptions] = useState<ToastOptions | undefined>({
     message: '',
     severity: 'info',
     duration: 3000,
   });
 
+  React.useEffect(() => {
+    if (snackPack.length > 0) {
+      setToastOptions({ ...snackPack[0] });
+      setSnackPack((prev) => prev.slice(1));
+      setOpen(true);
+    } else if (snackPack.length && open) {
+      setOpen(false);
+    }
+  }, [snackPack, toastOptions, open]);
   const showToast = (options: ToastOptions): void => {
-    setToastOptions({ ...options });
-    setOpen(true);
+    setSnackPack((prev) => [
+      ...prev,
+      { ...options, key: new Date().getTime() },
+    ]);
   };
 
-  const handleClose = (): void => {
+  const handleExited = (): void => {
+    setToastOptions(undefined);
+  };
+
+  const handleClose = (
+    _event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ): void => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
     setOpen(false);
   };
+  const { vertical, horizontal }: SnackbarOrigin = getDisplayLocation(
+    toastOptions?.severity,
+  );
 
   return (
     <ToastContext.Provider value={{ showToast }}>
       {children}
       <Snackbar
         open={open}
-        autoHideDuration={toastOptions.duration || 3000}
+        autoHideDuration={toastOptions?.duration || 3000}
         onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical, horizontal }}
+        TransitionComponent={GrowTransition}
+        TransitionProps={{ onExited: handleExited }}
       >
         <Alert
           onClose={handleClose}
-          severity={toastOptions.severity || 'info'}
+          severity={toastOptions?.severity || 'info'}
           sx={{ width: '100%' }}
         >
-          {toastOptions.message}
+          {toastOptions?.message}
         </Alert>
       </Snackbar>
     </ToastContext.Provider>
   );
 };
 
-// Custom Hook
 export const useToast = (): ToastContextType => {
   const context = useContext(ToastContext);
 
@@ -69,3 +110,19 @@ export const useToast = (): ToastContextType => {
 
   return context;
 };
+
+function getDisplayLocation(severity?: string): SnackbarOrigin {
+  let vertical: 'top' | 'bottom' = 'bottom';
+  let horizontal: 'left' | 'center' | 'right' = 'center';
+
+  if (severity === 'error' || severity === 'warning') {
+    vertical = 'top';
+    horizontal = 'right';
+  }
+
+  if (severity === 'success') {
+    horizontal = 'left';
+  }
+
+  return { vertical, horizontal };
+}
