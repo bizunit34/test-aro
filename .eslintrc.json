@@ -41,6 +41,9 @@
     "@typescript-eslint/naming-convention": [
       "error",
       { "selector": "class", "format": ["PascalCase"] }
-    ]
+    ],
+    "@typescript-eslint/typedef": "error",
+    "@typescript-eslint/no-explicit-any": "error"
+
   }
 }

@@ -4,7 +4,8 @@ export interface ItemModel extends CoreModel {
   name: string;
   description?: string;
   image: string;
-  price?: number;
+  // initial implementation won't involve price
+  // price?: number;
   quantityOnHand?: number;
   quantityOnOrder?: number;
   quantityOnBackOrder?: number;
