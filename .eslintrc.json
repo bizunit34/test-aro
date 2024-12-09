@@ -44,6 +44,5 @@
     ],
     "@typescript-eslint/typedef": "error",
     "@typescript-eslint/no-explicit-any": "error"
-
   }
 }

@@ -8,7 +8,7 @@ class ItemService {
       description: 'This is the description for item 1.',
       image:
         'https://aroconnection-com-strapi-bucket.s3.us-east-1.amazonaws.com/Aro_Plastic_Bag_1_7f98176006.jpg',
-      price: 1200,
+      // price: 1200,
       quantityOnHand: 52,
       quantityOnOrder: 4,
       quantityOnBackOrder: 22,
@@ -19,7 +19,7 @@ class ItemService {
       description: 'This is the description for item 2.',
       image:
         'https://aroconnection-com-strapi-bucket.s3.us-east-1.amazonaws.com/Aro_Plastic_Bag_1_7f98176006.jpg',
-      price: 1200,
+      // price: 1200,
       quantityOnHand: 52,
       quantityOnOrder: 4,
       quantityOnBackOrder: 22,

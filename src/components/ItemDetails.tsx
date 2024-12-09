@@ -45,7 +45,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
             <Table>
               <TableBody>
                 {Object.entries({
-                  price: item.price,
+                  // price: item.price,
                   quantityOnHand: item.quantityOnHand,
                   quantityOnOrder: item.quantityOnOrder,
                   quantityOnBackOrder: item.quantityOnBackOrder,

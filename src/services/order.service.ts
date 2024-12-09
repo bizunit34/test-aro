@@ -1,6 +1,7 @@
 import { OrderStatusEnum, OrderTypeEnum } from '@/enum';
 import { ItemModel, OrderDetailModel } from '@/models';
 import { OrderModel } from '@/models/objects/order.model';
+
 import LocalStorageServiceInstance from './local-storage.service';
 
 class OrderService {
@@ -162,9 +163,9 @@ class OrderService {
     for (const detail of updatedOrderDetails) {
       if (itemIdMap[detail.item._id] != null) {
         existingCart.order_detail[itemIdMap[detail.item._id]] = {
-            ...existingCart.order_detail[itemIdMap[detail.item._id]],
-            quantityOrdered: detail.quantityOrdered
-        }
+          ...existingCart.order_detail[itemIdMap[detail.item._id]],
+          quantityOrdered: detail.quantityOrdered,
+        };
         continue;
       }
 
@@ -194,49 +195,55 @@ class OrderService {
     const details: Array<OrderDetailModel> = [];
 
     if (this.activeCart == null) {
-        console.error(`The detail could not be removed due to the cart not existing.`);
-        return;
+      console.error(
+        `The detail could not be removed due to the cart not existing.`,
+      );
+
+      return;
     }
 
     for (const detail of this.activeCart?.order_detail ?? []) {
-        if (detail._id === orderDetailId) {
-            details.push({
-                ...detail,
-                quantityOrdered: options.quantityOrdered
-            });
-        }
+      if (detail._id === orderDetailId) {
+        details.push({
+          ...detail,
+          quantityOrdered: options.quantityOrdered,
+        });
+      }
 
-        details.push(detail);
+      details.push(detail);
     }
 
     this.setCart({
-        ...this.activeCart,
-        numberOfLines: details.length,
-        order_detail: details,
-    })
-}
+      ...this.activeCart,
+      numberOfLines: details.length,
+      order_detail: details,
+    });
+  }
 
   public removeOrderDetailFromCart(orderDetailId: number): void {
     const details: Array<OrderDetailModel> = [];
 
     if (this.activeCart == null) {
-        console.error(`The detail could not be removed due to the cart not existing.`);
-        return;
+      console.error(
+        `The detail could not be removed due to the cart not existing.`,
+      );
+
+      return;
     }
 
     for (const detail of this.activeCart?.order_detail ?? []) {
-        if (detail._id === orderDetailId) {
-            continue;
-        }
+      if (detail._id === orderDetailId) {
+        continue;
+      }
 
-        details.push(detail);
+      details.push(detail);
     }
 
     this.setCart({
-        ...this.activeCart,
-        numberOfLines: details.length,
-        order_detail: details,
-    })
+      ...this.activeCart,
+      numberOfLines: details.length,
+      order_detail: details,
+    });
   }
 
   public getCart(): OrderModel | undefined {
@@ -252,7 +259,7 @@ class OrderService {
       return;
     }
 
-    const cart = JSON.parse(existingCartString);
+    const cart: OrderModel = JSON.parse(existingCartString) as OrderModel;
 
     if (this.activeCart == null) {
       this.activeCart = cart;
