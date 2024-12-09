@@ -4,11 +4,13 @@ const ApiTips: Record<
     name: string;
     tips: Array<{
       title: string;
-      content: Array<{
-        type: string;
-        codeLang?: string;
-        value: string;
-      }>;
+      content:
+        | string
+        | Array<{
+            type: string;
+            codeLang?: string;
+            value: string;
+          }>;
     }>;
   }
 > = {

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Alert,
   Box,
@@ -6,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 import UserService from '../../services/user.service';
@@ -26,7 +28,7 @@ const Register: React.FC = () => {
       await UserService.signUp({ name, email, password });
       setSuccess(true);
       setTimeout(() => {
-        router.push('/login').catch((err) => console.error(err)); // Redirect to login page after sign-up
+        router.push('/login'); // Redirect to login page after sign-up
       }, 2000);
     } catch (err) {
       console.error('Error: ', err);

@@ -3,7 +3,7 @@ import React from 'react';
 
 import { ItemModel } from '@/models';
 import { PacdoraModel } from '@/models/pacdora/pacdora.model';
-import PacdoraService from '@/services/pacdora.service.ts';
+import PacdoraService from '@/services/pacdora.service';
 
 const pacdoraService: PacdoraService = new PacdoraService();
 const Pacdora: PacdoraModel | undefined = pacdoraService.getPacdora();

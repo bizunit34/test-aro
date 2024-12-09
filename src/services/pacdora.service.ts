@@ -270,11 +270,13 @@ class PacdoraService {
     const tips:
       | Array<{
           title: string;
-          content: Array<{
-            type: string;
-            codeLang?: string;
-            value: string;
-          }>;
+          content:
+            | string
+            | Array<{
+                type: string;
+                codeLang?: string;
+                value: string;
+              }>;
         }>
       | undefined = ApiTips[tipName].tips;
     let targetHtml = '';
@@ -284,21 +286,25 @@ class PacdoraService {
         const tip = tips[i];
         let content = '';
 
-        for (let j = 0; j < tip.content.length; j++) {
-          switch (tip.content[j].type) {
-            case 'p':
-              content += `<p>${tip.content[j].value}</p>`;
-              break;
-            case 'code':
-              content += `<pre><code class="${
-                tip.content[j].codeLang ?? 'language-html'
-              }">${tip.content[j].value
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')}</code></pre>`;
-              break;
-            case 'image':
-              content += `<img src="${tip.content[j].value}"/>`;
-              break;
+        if (typeof tip.content === 'string') {
+          content = tip.content;
+        } else {
+          for (let j = 0; j < tip.content.length; j++) {
+            switch (tip.content[j].type) {
+              case 'p':
+                content += `<p>${tip.content[j].value}</p>`;
+                break;
+              case 'code':
+                content += `<pre><code class="${
+                  tip.content[j].codeLang ?? 'language-html'
+                }">${tip.content[j].value
+                  .replace(/</g, '&lt;')
+                  .replace(/>/g, '&gt;')}</code></pre>`;
+                break;
+              case 'image':
+                content += `<img src="${tip.content[j].value}"/>`;
+                break;
+            }
           }
         }
         targetHtml += `
