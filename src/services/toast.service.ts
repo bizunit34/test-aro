@@ -1,7 +1,5 @@
 class ToastService {
-  public open(): void {
-    
-  }
+  public open(): void {}
 }
 
 const ToastServiceInstance: ToastService = new ToastService();

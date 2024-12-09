@@ -5,3 +5,4 @@ export * from './Footer';
 export * from './Header';
 export * from './ItemDetails';
 export * from './PacdoraCustomizationCard';
+export * from './Toast';

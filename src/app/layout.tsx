@@ -6,6 +6,8 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import React from 'react';
 
+import { ToastProvider } from '@/components';
+
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import theme from './theme';
@@ -38,9 +40,11 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <Header />
-            <div className='main'>{children}</div>
-            <Footer />
+            <ToastProvider>
+              <Header />
+              <div className='main'>{children}</div>
+              <Footer />
+            </ToastProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
         <script

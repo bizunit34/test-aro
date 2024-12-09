@@ -1,77 +1,71 @@
-import Alert from '@mui/material/Alert';
-import Button from '@mui/material/Button';
-import Slide, { SlideProps } from '@mui/material/Slide';
-import Snackbar, {
-  SnackbarCloseReason,
-  SnackbarOrigin,
-} from '@mui/material/Snackbar';
-import { TransitionProps } from '@mui/material/transitions';
-import * as React from 'react';
+'use client';
 
-function SlideTransition(
-  props: SlideProps,
-  direction: 'left' | 'right' | 'up' | 'down',
-) {
-  return <Slide {...props} direction={direction} />;
-}
+import { Alert, Snackbar } from '@mui/material';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 
-interface State extends SnackbarOrigin {
-  open: boolean;
-  Transition: React.ComponentType<
-    TransitionProps & {
-      children: React.ReactElement;
-    }
-  >;
-}
-
+// Define the type for the toast
 interface ToastOptions {
   message: string;
   severity?: 'success' | 'info' | 'warning' | 'error';
+  duration?: number; // in milliseconds
 }
 
-const Toast: React.FC<ToastOptions> = ({ message, severity }) => {
-  const [state, setState] = React.useState<State>({
-    open: false,
-    Transition: Slide,
-    vertical: 'top',
-    horizontal: 'center',
+// Context type
+interface ToastContextType {
+  showToast: (options: ToastOptions) => void;
+}
+
+// Create Context
+const ToastContext = createContext<ToastContextType | undefined>(undefined);
+
+// Provider Component
+export const ToastProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
+  const [open, setOpen] = useState(false);
+  const [toastOptions, setToastOptions] = useState<ToastOptions>({
+    message: '',
+    severity: 'info',
+    duration: 3000,
   });
 
-  const handleClick = (newState: SnackbarOrigin): void => {
-    setState({
-      ...newState,
-      open: true,
-      Transition: Slide,
-    });
+  const showToast = (options: ToastOptions): void => {
+    setToastOptions({ ...options });
+    setOpen(true);
   };
 
-  const handleClose = (
-    event?: React.SyntheticEvent | Event,
-    reason?: SnackbarCloseReason,
-  ): void => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setState({ ...state, open: false });
+  const handleClose = (): void => {
+    setOpen(false);
   };
 
   return (
-    <div>
-      <Button onClick={handleClick}>Open Snackbar</Button>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+    <ToastContext.Provider value={{ showToast }}>
+      {children}
+      <Snackbar
+        open={open}
+        autoHideDuration={toastOptions.duration || 3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
         <Alert
-          anchorOrigin={{ vertical, horizontal }}
           onClose={handleClose}
-          severity={severity ?? 'success'}
-          variant='filled'
+          severity={toastOptions.severity || 'info'}
           sx={{ width: '100%' }}
         >
-          {message}
+          {toastOptions.message}
         </Alert>
       </Snackbar>
-    </div>
+    </ToastContext.Provider>
   );
 };
 
-export default Toast;
+// Custom Hook
+export const useToast = (): ToastContextType => {
+  const context = useContext(ToastContext);
+
+  if (!context) {
+    throw new Error('useToast must be used within a ToastProvider');
+  }
+
+  return context;
+};

@@ -4,18 +4,6 @@ import ApiTips from '@/models/pacdora/api-tips';
 class PacdoraService {
   public Pacdora: PacdoraModel | undefined;
 
-  public constructor() {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore -- This is added via script and thus cannot be tracked until here
-    if (window.Pacdora != null) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.Pacdora = window.Pacdora;
-    }
-  }
-
   public static createPacdoraService(): PacdoraService {
     return new PacdoraService();
   }
@@ -25,6 +13,16 @@ class PacdoraService {
   }
 
   public async initializePacdora(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore -- This is added via script and thus cannot be tracked until here
+    if (window.Pacdora != null) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.Pacdora = window.Pacdora;
+    }
+
     if (this.Pacdora == null || process.env.PACDORA_API_ID == null) {
       console.error('There was an issue with loading the Pacdora script.');
 
