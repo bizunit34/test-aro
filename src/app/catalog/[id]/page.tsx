@@ -6,6 +6,7 @@ import React from 'react';
 import { ItemModel } from '@/models';
 import ItemServiceInstance from '@/services/item.service';
 
+// import PacdoraServiceInstance from '@/services/pacdora.service';
 import ItemDetails from '../../../components/ItemDetails';
 
 const ItemDetailsPage: React.FC = () => {
@@ -20,10 +21,26 @@ const ItemDetailsPage: React.FC = () => {
   if (item == null) {
     notFound();
   }
+  //   useEffect(() => {
+  //     const initializePacdora = async (): Promise<void> => {
+  //       try {
+  // //         await PacdoraServiceInstance.createPacdoraProject({
+  // //           id: 1
+  // // modelId: 100030
+  // // templateId:
+  // // isShowLoading:
+  // // doneBtn: 'Save'
+  // //         });
+  //       } catch (err) {
+  //         console.error(
+  //           'An error occurred while trying to initialize Pacdora: ',
+  //           err,
+  //         );
+  //       }
+  //     };
 
-  // const pacdoraService: PacdoraService = PacdoraService.createPacdoraService();
-
-  // pacdoraService.initializePacdora();
+  //     initializePacdora().catch((err) => console.error(err));
+  //   }, []);
 
   const frequentlyPurchasedTogether = [
     {
@@ -42,8 +59,6 @@ const ItemDetailsPage: React.FC = () => {
       image: 'https://via.placeholder.com/100x100',
     },
   ];
-
-  console.log('window: ', window);
 
   return (
     <>

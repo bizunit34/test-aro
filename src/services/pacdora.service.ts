@@ -4,15 +4,17 @@ import ApiTips from '@/models/pacdora/api-tips';
 class PacdoraService {
   public Pacdora: PacdoraModel | undefined;
 
-  public static createPacdoraService(): PacdoraService {
-    return new PacdoraService();
-  }
-
   public getPacdora(): PacdoraModel | undefined {
     return this.Pacdora;
   }
 
   public async initializePacdora(): Promise<void> {
+    console.log('window: ', window);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore -- This is added via script and thus cannot be tracked until here
+    console.log('Pacdora: ', window.Pacdora);
+    console.log('PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
+
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- This is added via script and thus cannot be tracked until here
     if (window.Pacdora != null) {
@@ -23,15 +25,21 @@ class PacdoraService {
       this.Pacdora = window.Pacdora;
     }
 
-    if (this.Pacdora == null || process.env.PACDORA_API_ID == null) {
+    if (
+      this.Pacdora == null ||
+      process.env.NEXT_PUBLIC_PACDORA_API_ID == null
+    ) {
       console.error('There was an issue with loading the Pacdora script.');
 
       return;
     }
 
+    console.log('Pacdora: ', this.Pacdora);
+    console.log('PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
+
     await this.Pacdora.init({
-      userId: undefined,
-      appId: process.env.PACDORA_API_ID,
+      userId: null,
+      appId: process.env.NEXT_PUBLIC_PACDORA_API_ID,
       isDelay: true,
       theme: '#333333',
       doneBtn: 'Save',
@@ -329,4 +337,6 @@ class PacdoraService {
   }
 }
 
-export default PacdoraService;
+const PacdoraServiceInstance: PacdoraService = new PacdoraService();
+
+export default PacdoraServiceInstance;

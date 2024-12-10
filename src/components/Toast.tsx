@@ -83,7 +83,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
       {children}
       <Snackbar
         open={open}
-        autoHideDuration={toastOptions?.duration || 3000}
+        autoHideDuration={toastOptions?.duration ?? 3000}
         onClose={handleClose}
         anchorOrigin={{ vertical, horizontal }}
         TransitionComponent={GrowTransition}

@@ -16,9 +16,10 @@ import { ItemModel } from '@/models';
 
 interface CatalogProps {
   item: ItemModel;
+  hasPacdora?: boolean;
 }
 
-const CatalogListCard: React.FC<CatalogProps> = ({ item }) => {
+const CatalogListCard: React.FC<CatalogProps> = ({ item, hasPacdora }) => {
   const router = useRouter();
   const handleNavigation = (route: string): void => {
     router.push(route);
@@ -52,6 +53,20 @@ const CatalogListCard: React.FC<CatalogProps> = ({ item }) => {
           <Button size='small' color='primary'>
             Customize
           </Button>
+          {hasPacdora ? (
+            <div
+              className='btn design-btn'
+              data-pacdora-ui='design-btn'
+              data-save-screenshot='false'
+              data-screenshot-width='800'
+              data-ui-tip='editor'
+            >
+              <div className='pac-loading small'></div>
+              Customize
+            </div>
+          ) : (
+            <></>
+          )}
         </CardActions>
       </Card>
     </Grid2>

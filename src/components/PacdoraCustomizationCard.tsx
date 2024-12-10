@@ -3,10 +3,9 @@ import React from 'react';
 
 import { ItemModel } from '@/models';
 import { PacdoraModel } from '@/models/pacdora/pacdora.model';
-import PacdoraService from '@/services/pacdora.service';
+import PacdoraServiceInstance from '@/services/pacdora.service';
 
-const pacdoraService: PacdoraService = new PacdoraService();
-const Pacdora: PacdoraModel | undefined = pacdoraService.getPacdora();
+const Pacdora: PacdoraModel | undefined = PacdoraServiceInstance.getPacdora();
 
 const PRICE_CONFIG: Record<string, Array<SimpleQuotationItem>> = {
   paper: [

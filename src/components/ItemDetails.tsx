@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Avatar,
   Box,
@@ -13,9 +15,10 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { ItemModel } from '@/models';
+import PacdoraServiceInstance from '@/services/pacdora.service';
 
 import CatalogListCard from './CatalogListCard';
 
@@ -28,6 +31,21 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
   item,
   frequentlyPurchasedTogether,
 }) => {
+  useEffect(() => {
+    const initializePacdora = async (): Promise<void> => {
+      try {
+        await PacdoraServiceInstance.initializePacdora();
+      } catch (err) {
+        console.error(
+          'An error occurred while trying to initialize Pacdora: ',
+          err,
+        );
+      }
+    };
+
+    initializePacdora().catch((err) => console.error(err));
+  }, []);
+
   return (
     <div>
       <Container maxWidth='md' sx={{ mt: 4 }} className='flex'>
@@ -45,7 +63,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
             <Table>
               <TableBody>
                 {Object.entries({
-                  // price: item.price,
+                  modelId: item.modelId,
                   quantityOnHand: item.quantityOnHand,
                   quantityOnOrder: item.quantityOnOrder,
                   quantityOnBackOrder: item.quantityOnBackOrder,

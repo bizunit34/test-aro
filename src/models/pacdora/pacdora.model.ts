@@ -9,7 +9,7 @@ export interface PacdoraModel {
     doneBtn?: string;
   }) => Promise<number>;
   init: (options: {
-    userId?: string;
+    userId: string | null;
     appId: string;
     isDelay: boolean;
     theme: string;
