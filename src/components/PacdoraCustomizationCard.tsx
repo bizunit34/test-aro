@@ -1,9 +1,11 @@
-import { Container } from '@mui/material';
+import { Button, Container } from '@mui/material';
 import React from 'react';
 
 import { ItemModel } from '@/models';
 import { PacdoraModel } from '@/models/pacdora/pacdora.model';
 import PacdoraServiceInstance from '@/services/pacdora.service';
+
+import styles from './PacdoraCustomizationCard.module.css';
 
 const Pacdora: PacdoraModel | undefined = PacdoraServiceInstance.getPacdora();
 
@@ -563,6 +565,7 @@ function onSliderDown(e: HTMLDivElement): void {
  * @returns
  */
 function onChangeDimension(e: HTMLSelectElement): void {
+  console.log('e: ', e);
   let value = e.value;
 
   if (value === '') {
@@ -574,6 +577,7 @@ function onChangeDimension(e: HTMLSelectElement): void {
       'Please input your dimension in the format of 315*202*62',
       '315*202*62',
     );
+    console.log('number: ', number);
     const sizes: Array<string> | undefined = number?.split('*');
 
     if (number == null || sizes == null || sizes.length !== 3) {
@@ -599,6 +603,7 @@ function onChangeDimension(e: HTMLSelectElement): void {
     value = number;
   }
 
+  console.log('value: ', value);
   const size = value.split('*');
   Pacdora?.setSize({
     length: Number(size[0]),
@@ -606,7 +611,7 @@ function onChangeDimension(e: HTMLSelectElement): void {
     height: Number(size[2]),
     async: true,
   });
-  makeQuotation();
+  // makeQuotation();
 }
 
 /**
@@ -729,22 +734,22 @@ function isNumber(content: number): boolean {
 
 const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
   return (
-    <Container maxWidth='md' sx={{ mt: 4 }}>
-      <div className='box-info'>
-        <div className='left'>
-          <div className='box-info-slider'>
-            <div className='box-info-item active'>
+    <Container sx={{ mt: 4 }}>
+      <div className={styles['box-info']}>
+        <div className={styles['left']}>
+          <div className={styles['box-info-slider']}>
+            <div className={`${styles['box-info-item']} ${styles['active']}`}>
               {/* <!-- 3D box expansion and collapse control component start --> */}
               <div
-                className='collapse-control'
+                className={styles['collapse-control']}
                 data-ui-tip='collapse'
                 data-position='bottom'
               >
                 <div onClick={() => openPacdora(0)}>Open</div>
-                <div className='slider-box'>
-                  <div className='slider-selecter'></div>
+                <div className={styles['slider-box']}>
+                  <div className={styles['slider-selecter']}></div>
                   <div
-                    className='pointer'
+                    className={styles['pointer']}
                     onPointerDown={(e: React.PointerEvent<HTMLDivElement>) =>
                       onSliderDown(e as unknown as HTMLDivElement)
                     }
@@ -756,7 +761,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
 
               {/* <!-- Pacdora component data-pacdora-ui="3d" start --> */}
               <div
-                className='d3'
+                className={styles['d3']}
                 data-pacdora-ui='3d'
                 data-pacdora-id='d3'
                 data-init-rotation='true'
@@ -764,44 +769,55 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
               {/* <!-- Pacdora component data-pacdora-ui="3d" end --> */}
             </div>
             {/* <!-- Pacdora component data-pacdora-ui="dieline" start --> */}
-            <div className='box-info-item' data-tip-position='center'>
-              <div className='dieline' data-pacdora-ui='dieline'></div>
+            <div className={styles['box-info-item']} data-tip-position='center'>
+              <div
+                className={styles['dieline']}
+                data-pacdora-ui='dieline'
+              ></div>
             </div>
             {/* <!-- Pacdora component data-pacdora-ui="dieline" end --> */}
 
             {/* <!-- Pacdora-component data-pacdora-ui="3d-preview" start --> */}
-            <div className='box-info-item' data-tip-position='center'>
-              <div data-pacdora-ui='3d-preview' className='preview'></div>
+            <div className={styles['box-info-item']} data-tip-position='center'>
+              <div
+                data-pacdora-ui='3d-preview'
+                className={styles['preview']}
+              ></div>
             </div>
             {/* <!-- Pacdora-component data-pacdora-ui="3d-preview" end --> */}
           </div>
 
           {/* <!-- Slide Switch Component --> */}
-          <div className='d3-and-d2-switch' data-ui-tip='switch'>
+          <div className={styles['d3-and-d2-switch']} data-ui-tip='switch'>
             <div
-              className='switch-item active'
+              className={`${styles['switch-item']} ${styles['active']}`}
               onClick={() => onSwitch2DAnd3D('3d')}
             >
               3D
             </div>
             <div
-              className='switch-item'
+              className={styles['switch-item']}
               onClick={() => onSwitch2DAnd3D('dieline')}
             >
               Dieline
             </div>
-            <div className='switch-item' onClick={() => onSwitch2DAnd3D('2d')}>
+            <div
+              className={styles['switch-item']}
+              onClick={() => onSwitch2DAnd3D('2d')}
+            >
               2D
             </div>
           </div>
           {/* <!-- Slide Switch Component end --> */}
-          <div className='pac-loading crop-parent'></div>
+          {/* <div
+            className={`${styles['pac-loading']} ${styles['crop-parent']}`}
+          ></div> */}
         </div>
-        <div className='right'>
-          <div className='sub-title' data-ui-tip='dimension'>
+        <div className={styles['right']}>
+          <div className={styles['sub-title']} data-ui-tip='dimension'>
             Dimension
           </div>
-          <div className='selector-box'>
+          <div className={styles['selector-box']}>
             <select
               onChange={(e) =>
                 onChangeDimension(e as unknown as HTMLSelectElement)
@@ -815,10 +831,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
               <option value='customize'>Customize</option>
             </select>
           </div>
-          <div className='sub-title mt30' data-ui-tip='material'>
+          <div
+            className={`${styles['sub-title']} ${styles['mt30']}`}
+            data-ui-tip='material'
+          >
             Material
           </div>
-          <div className='selector-box'>
+          <div className={styles['selector-box']}>
             <select
               onChange={(e) =>
                 onChangeMaterial(e as unknown as HTMLSelectElement)
@@ -831,10 +850,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
               <option value='Kraft paper'>Dark kraft paper</option>
             </select>
           </div>
-          <div className='sub-title mt30' data-ui-tip='thickness'>
+          <div
+            className={`${styles['sub-title']} ${styles['mt30']}`}
+            data-ui-tip='thickness'
+          >
             Thickness
           </div>
-          <div className='selector-box'>
+          <div className={styles['selector-box']}>
             <select
               onChange={(e) =>
                 onChangeThickness(e as unknown as HTMLSelectElement)
@@ -848,38 +870,46 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             </select>
           </div>
 
-          <div className='flex-between' id='quotation-selects'>
-            <div className='flex1'>
-              <div className='sub-title mt30'>Print</div>
-              <div className='selector-box'>
-                <select onChange={(e) => onChangePrint(e)} id='print'>
+          <div className={styles['flex-between']} id='quotation-selects'>
+            <div className={styles['flex1']}>
+              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
+                Print
+              </div>
+              <div className={styles['selector-box']}>
+                <select
+                  onChange={(e) => onChangePrint(e)}
+                  id='print'
+                  defaultValue='outside'
+                >
                   <option value=''>Choose the print method</option>
                   <option value='blank'>Blank</option>
-                  <option value='outside' selected={true}>
-                    Outside
-                  </option>
+                  <option value='outside'>Outside</option>
                   <option value='inside'>Inside</option>
                   <option value='both'>Both Sides</option>
                 </select>
               </div>
             </div>
 
-            <div className='flex1 ml20'>
-              <div className='sub-title mt30'>Finishing</div>
-              <div className='selector-box'>
-                <select onChange={(e) => onChangeFinishing(e)} id='finishing'>
+            <div className={`${styles['flex1']} ${styles['ml20']}`}>
+              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
+                Finishing
+              </div>
+              <div className={styles['selector-box']}>
+                <select
+                  onChange={(e) => onChangeFinishing(e)}
+                  id='finishing'
+                  defaultValue='gloss'
+                >
                   <option value=''>Choose the Finishing</option>
                   <option value='blank'>Blank</option>
-                  <option value='gloss' selected={true}>
-                    Gloss
-                  </option>
+                  <option value='gloss'>Gloss</option>
                   <option value='matte'>Matte</option>
                 </select>
               </div>
             </div>
           </div>
 
-          <div className='flex-between flex-end'>
+          <div className={`${styles['flex-between']} ${styles['flex-end']}`}>
             {/* <!-- <div className="ml-auto number-box">
                   <div className="number-control" onClick={() => onStep(-1)}>-</div>
                   <div id="count">1</div>
@@ -887,17 +917,18 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
                 </div> --> */}
 
             <div>
-              <div className='sub-title mt30'>Quantity</div>
-              <div className='selector-box'>
+              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
+                Quantity
+              </div>
+              <div className={styles['selector-box']}>
                 <select
                   onChange={(e) =>
                     onChangeNumber(e as unknown as HTMLSelectElement)
                   }
                   id='number'
+                  defaultValue='500'
                 >
-                  <option value='500' selected={true}>
-                    500
-                  </option>
+                  <option value='500'>500</option>
                   <option value='1000'>1000</option>
                   <option value='2000'>2000</option>
                   <option value='customize'>Customize</option>
@@ -905,30 +936,40 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
               </div>
             </div>
 
-            <div className='price-box mt30' id='price-box'>
+            <div
+              className={`${styles['price-box']} ${styles['mt30']}`}
+              id='price-box'
+            >
               {/* <!-- <span className="price-unit">$1.22 / unit</span> -->
                   <!-- <span className="price-text">Total:</span> -->
                   <!-- <span className="price-total">$200</span> --> */}
             </div>
           </div>
-          <div className='btn-group'>
-            <div className='btn btn-buy' onClick={() => onBuyClick()}>
-              <div className='pac-loading small white'></div>
-              Buy
+          <div className={styles['btn-group']}>
+            <div
+              className={`${styles['btn']} ${styles['btn-buy']}`}
+              onClick={() => onBuyClick()}
+            >
+              {/* <div
+                className={`${styles['pac-loading']} ${styles['small']} ${styles['white']}`}
+              ></div> */}
+              Add to Cart
             </div>
             <div
-              className='btn design-btn'
+              className={`${styles['btn']} ${styles['design-btn']}`}
               data-pacdora-ui='design-btn'
               data-save-screenshot='false'
               data-screenshot-width='800'
               data-ui-tip='editor'
             >
-              <div className='pac-loading small'></div>
+              {/* <div
+                className={`${styles['pac-loading']} ${styles['small']}`}
+              ></div> */}
               Design online
             </div>
           </div>
           <div
-            className='download-text'
+            className={styles['download-text']}
             data-pacdora-ui='download'
             data-app-key='Your app key'
             data-pacdora-id='download'
@@ -938,18 +979,18 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
           </div>
         </div>
       </div>
-      <div className='description-box'>
+      <div className={styles['description-box']}>
         <h2>Description of the product</h2>
         <div
-          className='description-info mt30'
+          className={`${styles['description-info']} ${styles['mt30']}`}
           data-pacdora-ui='info-description'
         ></div>
         <div
-          className='description-info mt30'
+          className={`${styles['description-info']} ${styles['mt30']}`}
           data-pacdora-ui='info-description'
         ></div>
         <div
-          className='description-info mt30'
+          className={`${styles['description-info']} ${styles['mt30']}`}
           data-pacdora-ui='info-description'
         ></div>
       </div>

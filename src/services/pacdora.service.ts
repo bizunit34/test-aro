@@ -9,11 +9,14 @@ class PacdoraService {
   }
 
   public async initializePacdora(): Promise<void> {
-    console.log('window: ', window);
+    console.log('initializePacdora window: ', window);
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- This is added via script and thus cannot be tracked until here
-    console.log('Pacdora: ', window.Pacdora);
-    console.log('PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
+    console.log('initializePacdora Pacdora: ', window.Pacdora);
+    console.log(
+      'initializePacdora PACDORA_API_ID: ',
+      process.env.NEXT_PUBLIC_PACDORA_API_ID,
+    );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- This is added via script and thus cannot be tracked until here
@@ -34,9 +37,7 @@ class PacdoraService {
       return;
     }
 
-    console.log('Pacdora: ', this.Pacdora);
-    console.log('PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
-
+    console.log('init');
     await this.Pacdora.init({
       userId: null,
       appId: process.env.NEXT_PUBLIC_PACDORA_API_ID,
@@ -47,27 +48,39 @@ class PacdoraService {
         'Upload & Design': 'Online design',
       },
     });
-    const userInfo: Record<string, string | number> =
-      await this.Pacdora.getUserInfo();
-    console.log('user info:', userInfo);
+    console.log('getUserInfo');
+    // const userInfo: Record<string, string | number> =
+    //   await this.Pacdora.getUserInfo();
+    // console.log('user info:', userInfo);
   }
 
   public async createPacdoraProject(options: {
-    id: number | undefined;
-    modelId: number;
-    templateId: number | undefined;
+    id?: number | null;
+    modelId: string;
+    templateId?: number | null;
     isShowLoading?: boolean;
     doneBtn?: string;
   }): Promise<void> {
-    if (this.Pacdora == null || process.env.PACDORA_API_ID == null) {
-      console.error('There was an issue with loading the Pacdora script.');
+    console.log('createPacdoraProject Pacdora: ', this.Pacdora);
+    console.log(
+      'createPacdoraProject PACDORA_API_ID: ',
+      process.env.NEXT_PUBLIC_PACDORA_API_ID,
+    );
+
+    if (
+      this.Pacdora == null ||
+      process.env.NEXT_PUBLIC_PACDORA_API_ID == null
+    ) {
+      console.error('There was an issue with creating the Pacdora Project.');
 
       return;
     }
 
+    console.log('creating the Pacdora Scene');
+
     const { id, modelId, templateId, isShowLoading, doneBtn } = options;
     await this.Pacdora.createScene({
-      id: id,
+      id,
       modelId: modelId,
       templateId,
       isShowLoading: isShowLoading ?? false,

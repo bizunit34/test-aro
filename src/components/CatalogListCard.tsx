@@ -20,6 +20,7 @@ interface CatalogProps {
 }
 
 const CatalogListCard: React.FC<CatalogProps> = ({ item, hasPacdora }) => {
+  console.log('hasPacdora: ', hasPacdora);
   const router = useRouter();
   const handleNavigation = (route: string): void => {
     router.push(route);

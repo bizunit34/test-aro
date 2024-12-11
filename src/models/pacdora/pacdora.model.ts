@@ -2,9 +2,9 @@ export interface PacdoraModel {
   $on: (element: string, callback: () => void) => void;
   appId: 'string';
   createScene: (options: {
-    id: number | undefined;
-    modelId: number;
-    templateId: number | undefined;
+    id?: number | null;
+    modelId: string;
+    templateId?: number | null;
     isShowLoading?: boolean;
     doneBtn?: string;
   }) => Promise<number>;

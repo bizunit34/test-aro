@@ -21,6 +21,7 @@ import { ItemModel } from '@/models';
 import PacdoraServiceInstance from '@/services/pacdora.service';
 
 import CatalogListCard from './CatalogListCard';
+import PacdoraCustomizationCard from './PacdoraCustomizationCard';
 
 interface ItemDetailsProps {
   item: ItemModel;
@@ -31,10 +32,25 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
   item,
   frequentlyPurchasedTogether,
 }) => {
+  // let hasPacdora: boolean = false;
+
   useEffect(() => {
     const initializePacdora = async (): Promise<void> => {
+      if (item.modelId == null) {
+        return;
+      }
+
       try {
+        console.log('initializePacdora');
         await PacdoraServiceInstance.initializePacdora();
+        console.log('createPacdoraProject');
+        await PacdoraServiceInstance.createPacdoraProject({
+          modelId: item.modelId,
+        });
+        console.log('applyListeners');
+        PacdoraServiceInstance.applyListeners();
+        console.log('everything has been applied');
+        // hasPacdora = true;
       } catch (err) {
         console.error(
           'An error occurred while trying to initialize Pacdora: ',
@@ -44,14 +60,16 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
     };
 
     initializePacdora().catch((err) => console.error(err));
-  }, []);
+  }, [item.modelId]);
 
   return (
     <div>
+      <PacdoraCustomizationCard item={item} />
       <Container maxWidth='md' sx={{ mt: 4 }} className='flex'>
         {/* Item Image and Title */}
         <div style={{ width: '300px', marginRight: '20px' }}>
-          <CatalogListCard key={item._id} item={item} />
+          {/* @todo - update to use variable */}
+          <CatalogListCard key={item._id} item={item} hasPacdora={true} />
         </div>
 
         {/* Item Details Table */}
