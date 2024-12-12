@@ -62,7 +62,7 @@ const DimensionSelector: React.FC<DimensionSelectorProps> = ({
   return (
     <div className={styles.selectorBox}>
       <FormControl fullWidth>
-        <InputLabel id='dimension-label'>Dimension</InputLabel>
+        <InputLabel id='dimension-label'>Choose the dimension</InputLabel>
         <Select
           labelId='dimension-label'
           id='dimension'

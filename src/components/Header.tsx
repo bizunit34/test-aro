@@ -1,8 +1,12 @@
 'use client';
 
-import { Menu as MenuIcon } from '@mui/icons-material';
+import {
+  Menu as MenuIcon,
+  ShoppingCart as ShoppingCartIcon,
+} from '@mui/icons-material';
 import {
   AppBar,
+  Badge,
   Box,
   IconButton,
   Menu,
@@ -12,9 +16,11 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { debounceTime, Subscription, tap } from 'rxjs';
 
-// Styled Menu component
+import OrderServiceInstance from '@/services/order.service';
+
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     backgroundColor: theme.palette.background.paper,
@@ -22,7 +28,21 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 }));
 
 const Header: React.FC = () => {
+  const [cartCount, setCartCount] = useState(3);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  useEffect(() => {
+    const cartSubscription: Subscription = OrderServiceInstance.getCart()
+      .pipe(
+        debounceTime(100),
+        tap((cart) => {
+          setCartCount(cart?.order_detail.length ?? 0);
+        }),
+      )
+      .subscribe();
+
+    return cartSubscription.unsubscribe();
+  });
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -121,6 +141,15 @@ const Header: React.FC = () => {
             ))}
           </StyledMenu>
         </Box>
+
+        <IconButton color='inherit'>
+          <Badge
+            badgeContent={cartCount > 0 ? cartCount : null}
+            color='secondary'
+          >
+            <ShoppingCartIcon />
+          </Badge>
+        </IconButton>
       </Toolbar>
     </AppBar>
   );

@@ -14,7 +14,6 @@ import {
 import React, { useState } from 'react';
 
 import { ItemModel } from '@/models';
-import { PacdoraModel } from '@/models/pacdora/pacdora.model';
 import PacdoraServiceInstance from '@/services/pacdora.service';
 
 import DimensionSelector from './DimenionSelector';
@@ -108,7 +107,7 @@ function onChangeMaterial(
   if (value !== '') {
     switch (value) {
       case 'White card board':
-        Pacdora?.setMaterial({
+        PacdoraServiceInstance.getPacdora()?.setMaterial({
           name: 'White card board',
           image:
             '//cdn.pacdora.com/science/image/94e8078a-9931-42cd-97ed-57883bd88085.png',
@@ -116,7 +115,7 @@ function onChangeMaterial(
         });
         break;
       case 'E-flute paper':
-        Pacdora?.setMaterial({
+        PacdoraServiceInstance.getPacdora()?.setMaterial({
           name: 'E-flute paper',
           image:
             '//cdn.pacdora.com/science/image/00e45c0b-9cf7-4d39-bdc8-82bb202909d9.png',
@@ -124,7 +123,7 @@ function onChangeMaterial(
         });
         break;
       case 'Kraft paper':
-        Pacdora?.setMaterial({
+        PacdoraServiceInstance.getPacdora()?.setMaterial({
           name: 'Kraft paper',
           image: '//cdn.pacdora.com/science/image/material_kraft.png',
           async: true,
@@ -182,11 +181,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
     }
 
     setSlider(newValue);
-    console.log('newValue: ', newValue);
-    console.log('newValue / 100: ', newValue / 100);
-    console.log('Pacdora: ', PacdoraServiceInstance.getPacdora());
     PacdoraServiceInstance.getPacdora()?.collapse('d3', newValue / 100);
-    console.log('newValue / 100: ', newValue / 100);
   };
 
   const handleDimensionChange = (dimension: string): void => {
@@ -281,7 +276,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             <div className={styles['sub-title']} data-ui-tip='material'>
               Material
             </div>
-            <FormControl fullWidth className={styles['selector-box']}>
+            <FormControl fullWidth>
               <InputLabel id='material-label'>Choose the material</InputLabel>
               <Select
                 labelId='material-label'
@@ -303,7 +298,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             <div className={styles['sub-title']} data-ui-tip='thickness'>
               Thickness
             </div>
-            <FormControl fullWidth className={styles['selector-box']}>
+            <FormControl fullWidth>
               <InputLabel id='thickness-label'>Choose the thickness</InputLabel>
               <Select
                 labelId='thickness-label'
@@ -313,9 +308,8 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
                   onChangeThickness(e.target);
                 }}
               >
-                <MenuItem value=''>Choose the thickness</MenuItem>
-                <MenuItem value='1.5'>1.5mm</MenuItem>
                 <MenuItem value='1'>1mm</MenuItem>
+                <MenuItem value='1.5'>1.5mm</MenuItem>
                 <MenuItem value='2'>2mm</MenuItem>
               </Select>
             </FormControl>
@@ -323,14 +317,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
 
           <Box>
             <div className={styles['sub-title']}>Print</div>
-            <FormControl fullWidth className={styles['selector-box']}>
+            <FormControl fullWidth>
               <InputLabel id='print-label'>Choose the print method</InputLabel>
               <Select
                 labelId='print-label'
                 value={print}
                 onChange={(e) => setPrint(e.target.value)}
               >
-                <MenuItem value=''>Choose the print method</MenuItem>
                 <MenuItem value='blank'>Blank</MenuItem>
                 <MenuItem value='outside'>Outside</MenuItem>
                 <MenuItem value='inside'>Inside</MenuItem>
@@ -341,14 +334,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
 
           <Box>
             <div className={styles['sub-title']}>Finishing</div>
-            <FormControl fullWidth className={styles['selector-box']}>
+            <FormControl fullWidth>
               <InputLabel id='finishing-label'>Choose the finishing</InputLabel>
               <Select
                 labelId='finishing-label'
                 value={finishing}
                 onChange={(e) => setFinishing(e.target.value)}
               >
-                <MenuItem value=''>Choose the finishing</MenuItem>
                 <MenuItem value='blank'>Blank</MenuItem>
                 <MenuItem value='gloss'>Gloss</MenuItem>
                 <MenuItem value='matte'>Matte</MenuItem>
@@ -358,7 +350,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
 
           <Box>
             <div className={styles['sub-title']}>Quantity</div>
-            <FormControl fullWidth className={styles['selector-box']}>
+            <FormControl fullWidth>
               <InputLabel id='quantity-label'>Choose the quantity</InputLabel>
               <Select
                 labelId='quantity-label'

@@ -1,3 +1,5 @@
+import { BehaviorSubject, Observable, of } from 'rxjs';
+
 import { OrderStatusEnum, OrderTypeEnum } from '@/enum';
 import { ItemModel, OrderDetailModel } from '@/models';
 import { OrderModel } from '@/models/objects/order.model';
@@ -6,7 +8,7 @@ import LocalStorageServiceInstance from './local-storage.service';
 
 class OrderService {
   private static readonly CART_KEY: string = 'cart';
-  private activeCart: OrderModel | undefined;
+  private activeCart: BehaviorSubject<OrderModel | undefined> | undefined;
   private orders: Array<OrderModel> = [
     {
       _id: 1,
@@ -129,7 +131,7 @@ class OrderService {
   }
 
   public createCart(options: Omit<OrderCreationOptions, 'type'>): OrderModel {
-    const existingCart: OrderModel | undefined = this.getCart();
+    const existingCart: OrderModel | undefined = this.activeCart?.value;
 
     if (existingCart != null) {
       return this.updateCart({ ...options, type: OrderTypeEnum.CART });
@@ -146,7 +148,7 @@ class OrderService {
 
   public updateCart(options: OrderCreationOptions): OrderModel {
     const { updatedOrderDetails } = options;
-    const existingCart: OrderModel | undefined = this.getCart();
+    const existingCart: OrderModel | undefined = this.activeCart?.value;
 
     if (existingCart == null) {
       return this.createOrder(options);
@@ -193,8 +195,9 @@ class OrderService {
     options: { quantityOrdered: number },
   ): void {
     const details: Array<OrderDetailModel> = [];
+    const activeCart: OrderModel | undefined = this.activeCart?.value;
 
-    if (this.activeCart == null) {
+    if (activeCart == null) {
       console.error(
         `The detail could not be removed due to the cart not existing.`,
       );
@@ -202,7 +205,7 @@ class OrderService {
       return;
     }
 
-    for (const detail of this.activeCart?.order_detail ?? []) {
+    for (const detail of activeCart?.order_detail ?? []) {
       if (detail._id === orderDetailId) {
         details.push({
           ...detail,
@@ -214,7 +217,7 @@ class OrderService {
     }
 
     this.setCart({
-      ...this.activeCart,
+      ...activeCart,
       numberOfLines: details.length,
       order_detail: details,
     });
@@ -222,8 +225,9 @@ class OrderService {
 
   public removeOrderDetailFromCart(orderDetailId: number): void {
     const details: Array<OrderDetailModel> = [];
+    const activeCart: OrderModel | undefined = this.activeCart?.value;
 
-    if (this.activeCart == null) {
+    if (activeCart == null) {
       console.error(
         `The detail could not be removed due to the cart not existing.`,
       );
@@ -231,7 +235,7 @@ class OrderService {
       return;
     }
 
-    for (const detail of this.activeCart?.order_detail ?? []) {
+    for (const detail of activeCart?.order_detail ?? []) {
       if (detail._id === orderDetailId) {
         continue;
       }
@@ -240,13 +244,13 @@ class OrderService {
     }
 
     this.setCart({
-      ...this.activeCart,
+      ...activeCart,
       numberOfLines: details.length,
       order_detail: details,
     });
   }
 
-  public getCart(): OrderModel | undefined {
+  public getCart(): Observable<OrderModel | undefined> {
     if (this.activeCart != null) {
       return this.activeCart;
     }
@@ -256,20 +260,21 @@ class OrderService {
     );
 
     if (existingCartString == null) {
-      return;
+      return of(undefined);
     }
 
     const cart: OrderModel = JSON.parse(existingCartString) as OrderModel;
 
     if (this.activeCart == null) {
-      this.activeCart = cart;
+      this.activeCart = new BehaviorSubject<OrderModel | undefined>(undefined);
+      this.activeCart?.next(cart);
     }
 
-    return this.activeCart;
+    return this.activeCart ?? of(undefined);
   }
 
   public setCart(cart: OrderModel): void {
-    this.activeCart = cart;
+    this.activeCart?.next(cart);
     LocalStorageServiceInstance.set(
       OrderService.CART_KEY,
       JSON.stringify(cart),
