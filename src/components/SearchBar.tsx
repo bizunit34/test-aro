@@ -44,9 +44,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilterChange }) => {
 
   useEffect(() => {
     // Update available subcategories based on selected categories
-    const updatedSubcategories = categories.flatMap(
+    let updatedSubcategories = categories.flatMap(
       (category) => categorySubcategoryMap[category] || [],
     );
+
+    if (categories.length === 0 && updatedSubcategories.length === 0) {
+      updatedSubcategories = Object.values(categorySubcategoryMap).flat();
+    }
+
     setAvailableSubcategories(updatedSubcategories);
 
     // Remove any currently selected subcategories that are no longer valid

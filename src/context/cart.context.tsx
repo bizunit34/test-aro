@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { OrderModel, OrderDetailModel } from '../models';
-import { OrderTypeEnum, OrderStatusEnum } from '../enum';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+
+import { OrderStatusEnum, OrderTypeEnum } from '../enum';
+import { OrderDetailModel, OrderModel } from '../models';
 
 interface CartContextType {
   cart: OrderModel | null;
@@ -9,14 +10,17 @@ interface CartContextType {
   deleteCart: () => void;
   submitCart: () => void;
   addItemToCart: (item: OrderDetailModel) => void;
-  updateItemInCart: (itemId: number, updatedItem: Partial<OrderDetailModel>) => void;
+  updateItemInCart: (
+    itemId: number,
+    updatedItem: Partial<OrderDetailModel>,
+  ) => void;
   removeItemFromCart: (itemId: number) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 // Helper functions for localStorage
-const saveCartToLocalStorage = (cart: OrderModel | null) => {
+const saveCartToLocalStorage = (cart: OrderModel | null): void => {
   if (cart) {
     localStorage.setItem('cart', JSON.stringify(cart));
   } else {
@@ -26,22 +30,25 @@ const saveCartToLocalStorage = (cart: OrderModel | null) => {
 
 const getCartFromLocalStorage = (): OrderModel | null => {
   const storedCart = localStorage.getItem('cart');
-  return storedCart ? JSON.parse(storedCart) : null;
+
+  return storedCart ? (JSON.parse(storedCart) as OrderModel) : null;
 };
 
 // CartContextProvider Component
-export const CartContextProvider: (({ children }: { children: unknown; }) => {}) = ({ children }) => {
+export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [cart, setCart] = useState<OrderModel | null>(getCartFromLocalStorage);
 
   useEffect(() => {
     saveCartToLocalStorage(cart);
   }, [cart]);
 
-  const getCart = () => {
+  const getCart = (): OrderModel | null => {
     return cart;
   };
 
-  const createCart = (clientId: number, userId: number) => {
+  const createCart = (clientId: number, userId: number): void => {
     const newCart: OrderModel = {
       _id: Date.now(), // Temporary unique ID
       fk_client__id: clientId,
@@ -54,11 +61,11 @@ export const CartContextProvider: (({ children }: { children: unknown; }) => {})
     setCart(newCart);
   };
 
-  const deleteCart = () => {
+  const deleteCart = (): void => {
     setCart(null);
   };
 
-  const submitCart = () => {
+  const submitCart = (): void => {
     if (!cart) return;
 
     setCart({
@@ -68,20 +75,27 @@ export const CartContextProvider: (({ children }: { children: unknown; }) => {})
     });
   };
 
-  const addItemToCart = (item: OrderDetailModel) => {
-    if (!cart) return;
+  const addItemToCart = (item: OrderDetailModel): void => {
+    if (!cart) {
+      return;
+    }
 
     const existingItemIndex = cart.order_detail.findIndex(
-      (existingItem) => existingItem._id === item._id
+      (existingItem) => existingItem._id === item._id,
     );
 
     let updatedDetails;
+
     if (existingItemIndex !== -1) {
       // Update the existing item
       updatedDetails = cart.order_detail.map((existingItem, index) =>
         index === existingItemIndex
-          ? { ...existingItem, quantityOrdered: existingItem.quantityOrdered + item.quantityOrdered }
-          : existingItem
+          ? {
+              ...existingItem,
+              quantityOrdered:
+                existingItem.quantityOrdered + item.quantityOrdered,
+            }
+          : existingItem,
       );
     } else {
       // Add the new item
@@ -95,20 +109,25 @@ export const CartContextProvider: (({ children }: { children: unknown; }) => {})
     });
   };
 
-  const updateItemInCart = (itemId: number, updatedItem: Partial<OrderDetailModel>) => {
+  const updateItemInCart = (
+    itemId: number,
+    updatedItem: Partial<OrderDetailModel>,
+  ): void => {
     if (!cart) return;
 
     const updatedDetails = cart.order_detail.map((item) =>
-      item._id === itemId ? { ...item, ...updatedItem } : item
+      item._id === itemId ? { ...item, ...updatedItem } : item,
     );
 
     setCart({ ...cart, order_detail: updatedDetails });
   };
 
-  const removeItemFromCart = (itemId: number) => {
+  const removeItemFromCart = (itemId: number): void => {
     if (!cart) return;
 
-    const updatedDetails = cart.order_detail.filter((item) => item._id !== itemId);
+    const updatedDetails = cart.order_detail.filter(
+      (item) => item._id !== itemId,
+    );
     setCart({
       ...cart,
       order_detail: updatedDetails,
@@ -117,7 +136,18 @@ export const CartContextProvider: (({ children }: { children: unknown; }) => {})
   };
 
   return (
-    <CartContext.Provider value={{cart,getCart,createCart,deleteCart,submitCart,addItemToCart,updateItemInCart,removeItemFromCart}}>
+    <CartContext.Provider
+      value={{
+        cart,
+        getCart,
+        createCart,
+        deleteCart,
+        submitCart,
+        addItemToCart,
+        updateItemInCart,
+        removeItemFromCart,
+      }}
+    >
       {children}
     </CartContext.Provider>
   );
@@ -126,8 +156,10 @@ export const CartContextProvider: (({ children }: { children: unknown; }) => {})
 // Hook for accessing CartContext
 export const useCartContext = (): CartContextType => {
   const context = useContext(CartContext);
+
   if (!context) {
     throw new Error('useCartContext must be used within a CartContextProvider');
   }
+
   return context;
 };
