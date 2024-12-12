@@ -1,478 +1,27 @@
-import { Button, Container } from '@mui/material';
-import React from 'react';
+'use client';
+
+import {
+  Box,
+  Button,
+  ButtonGroup,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Slider,
+} from '@mui/material';
+import React, { useState } from 'react';
 
 import { ItemModel } from '@/models';
 import { PacdoraModel } from '@/models/pacdora/pacdora.model';
 import PacdoraServiceInstance from '@/services/pacdora.service';
 
+import DimensionSelector from './DimenionSelector';
 import styles from './PacdoraCustomizationCard.module.css';
-
-const Pacdora: PacdoraModel | undefined = PacdoraServiceInstance.getPacdora();
-
-const PRICE_CONFIG: Record<string, Array<SimpleQuotationItem>> = {
-  paper: [
-    {
-      name: 'White card board',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 1.5,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-    {
-      name: 'E-flute paper',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 2.6,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-    {
-      name: 'B-flute paper',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 2.9,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-    {
-      name: 'Kraft paper',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 1.2,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-  ],
-  print: [
-    {
-      name: 'default',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 0.5,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-  ],
-  surface: [
-    {
-      name: 'blank',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 0,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-    {
-      name: 'gloss',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 0.35,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-    {
-      name: 'matte',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 0.3,
-          unit: 'm',
-          minFee: 0,
-        },
-      ],
-    },
-  ],
-  cut: [
-    {
-      name: 'default',
-      range: [
-        {
-          minCount: 1,
-          maxCount: 999999,
-          price: 0.1,
-          unit: '',
-          minFee: 0,
-        },
-      ],
-    },
-  ],
-};
 
 interface ItemDetailsProps {
   item: ItemModel;
-}
-
-class RangeItem {
-  public minCount: number;
-  public maxCount: number;
-  public minFee: number;
-  public price: number;
-  public unit: string;
-  public constructor(
-    minCount: number,
-    maxCount: number,
-    minFee: number,
-    price: number,
-    unit: string,
-  ) {
-    this.minCount = minCount;
-    this.maxCount = maxCount;
-    this.minFee = minFee;
-    this.price = price;
-    this.unit = unit;
-  }
-}
-
-class CalcResultItem {
-  public name: string;
-  public mode: string;
-  public count: number;
-  public minFee: number;
-  public price: number;
-  public unit: string;
-  public fee: number;
-  public constructor(
-    name: string,
-    mode: string,
-    count: number,
-    minFee: number,
-    price: number,
-    unit: string,
-    fee: number,
-  ) {
-    this.name = name;
-    this.mode = mode;
-    this.count = count;
-    this.minFee = minFee;
-    this.price = price;
-    this.unit = unit;
-    this.fee = fee;
-  }
-}
-
-class CalcResult {
-  public fee: number;
-  public list: unknown;
-  public constructor(fee: number, list: unknown) {
-    this.fee = fee;
-    this.list = list;
-  }
-}
-
-interface SimpleQuotationItem {
-  name: string;
-  range: Array<RangeItem>;
-}
-
-interface Params {
-  count: number;
-  knifeX: number;
-  knifeY: number;
-  printName: string;
-  printSide: number;
-  paperName: string;
-  surfaceName: string;
-  cutName: string;
-}
-
-class SimpleQuotation {
-  public config: Record<string, Array<SimpleQuotationItem>>;
-  public params?: Params;
-  public constructor(config: Record<string, Array<SimpleQuotationItem>>) {
-    this.config = config;
-  }
-
-  public makeQuotation(params: Params): CalcResult {
-    this.params = params;
-    const resItems = [
-      this.feePaper(),
-      this.feePrint(),
-      this.feeSurface(),
-      this.feeCut(),
-    ];
-    const totalFee = resItems.reduce(
-      (total, item) => total + (item?.fee ?? 0),
-      0,
-    );
-
-    return new CalcResult(totalFee, resItems);
-  }
-
-  public getQuotationConfig(
-    type: string,
-    name: string,
-    count: number,
-  ): RangeItem | undefined {
-    const cfg: Array<SimpleQuotationItem> = this.config?.[type];
-
-    if (!cfg) throw new Error();
-    const c = cfg.find((item) => item.name === name);
-
-    if (!c) throw new Error();
-    let config: RangeItem | undefined;
-
-    for (const r of c.range) {
-      if (r.minCount <= count && r.maxCount > count) {
-        config = r;
-      }
-    }
-
-    return config;
-  }
-
-  public makeQuotationByArea(
-    { area, count }: { area: number; count: number },
-    config: RangeItem | undefined,
-  ): CalcResultItem | undefined {
-    if (config == null) {
-      return;
-    }
-
-    const fee = Math.max(area * config.price * count, config.minFee || 0);
-
-    return new CalcResultItem(
-      'Name',
-      'area',
-      count,
-      config.minFee,
-      config.price,
-      config.unit,
-      fee,
-    );
-  }
-
-  public makeQuotationByCount(
-    { count }: { count: number },
-    config: RangeItem | undefined,
-  ): CalcResultItem | undefined {
-    if (config == null) {
-      return;
-    }
-
-    const fee = Math.max(config.price * count, config.minFee || 0);
-
-    return new CalcResultItem(
-      'testName',
-      'count',
-      count,
-      config.minFee,
-      config.price,
-      config.unit,
-      fee,
-    );
-  }
-
-  public feePaper(): CalcResultItem | undefined {
-    if (this.params == null) {
-      return;
-    }
-
-    const { count, knifeX, knifeY, paperName } = this.params;
-    const cfg: RangeItem | undefined = this.getQuotationConfig(
-      'paper',
-      paperName,
-      count,
-    );
-
-    return this.makeQuotationByArea(
-      { area: (knifeX * knifeY) / 1e6, count },
-      cfg,
-    );
-  }
-
-  public feePrint(): CalcResultItem | undefined {
-    if (this.params == null) {
-      return;
-    }
-
-    const { count, knifeX, knifeY, printName, printSide } = this.params;
-    const cfg: RangeItem | undefined = this.getQuotationConfig(
-      'print',
-      printName,
-      count,
-    );
-
-    return this.makeQuotationByArea(
-      { area: (knifeX * knifeY) / 1e6, count: count * printSide },
-      cfg,
-    );
-  }
-
-  public feeSurface(): CalcResultItem | undefined {
-    if (this.params == null) {
-      return;
-    }
-
-    const { count, knifeX, knifeY, surfaceName } = this.params;
-    const cfg: RangeItem | undefined = this.getQuotationConfig(
-      'surface',
-      surfaceName,
-      count,
-    );
-
-    return this.makeQuotationByArea(
-      { area: (knifeX * knifeY) / 1e6, count },
-      cfg,
-    );
-  }
-
-  public feeCut(): CalcResultItem | undefined {
-    if (this.params == null) {
-      return;
-    }
-
-    const { count, cutName = 'default' } = this.params;
-    const cfg: RangeItem | undefined = this.getQuotationConfig(
-      'cut',
-      cutName,
-      count,
-    );
-
-    return this.makeQuotationByCount({ count }, cfg);
-  }
-}
-
-function getQueryValue(queryName: string): string | null {
-  const paramsString = window.location.search.substring(1);
-  const params = new URLSearchParams(paramsString);
-
-  return params.get(queryName);
-}
-
-function makeQuotationForBox(): void {
-  const dimension: HTMLInputElement | null =
-    document.querySelector('#dimension');
-  const material: HTMLInputElement | null = document.querySelector('#material');
-  const print: HTMLInputElement | null = document.querySelector('#print');
-  const finishing: HTMLInputElement | null =
-    document.querySelector('#finishing');
-  const number: HTMLInputElement | null = document.querySelector('#number');
-
-  if (
-    !dimension?.value ||
-    !material?.value ||
-    !print?.value ||
-    !finishing?.value ||
-    !number?.value
-  ) {
-    return;
-  }
-
-  const sizes = dimension.value.split('*');
-  const length = Number(sizes[0]);
-  const width = Number(sizes[1]);
-  const height = Number(sizes[2]);
-
-  const knifeX = 2 * (length + width);
-  const knifeY = height + 2 * width;
-
-  const quotation = new SimpleQuotation(PRICE_CONFIG);
-  let faces = 0;
-
-  if (print.value === 'inside' || print.value === 'outside') {
-    faces = 1;
-  } else if (print.value === 'both') {
-    faces = 2;
-  }
-
-  const result = quotation.makeQuotation({
-    count: Number(number.value),
-    knifeX: knifeX,
-    knifeY: knifeY,
-    paperName: material.value,
-    printName: 'default',
-    printSide: faces,
-    surfaceName: finishing.value,
-    cutName: 'default',
-  });
-
-  if (result) {
-    const price: Element | null = document.querySelector('#price-box');
-
-    if (price == null) {
-      return;
-    }
-
-    price.innerHTML = '$' + result.fee.toFixed(1);
-    price.innerHTML = `
-      <span class="price-text">Total:</span>
-      <span class="price-total">$${result.fee.toFixed(1)} </span>
-      <span class="price-unit">($${(result.fee / Number(number.value)).toFixed(
-        2,
-      )} / unit)</span>
-      `;
-    console.log('quotation:', result.fee.toFixed(2));
-  }
-}
-
-function makeQuotationForMockup(): void {
-  const number: HTMLInputElement | null = document.querySelector('#number');
-
-  if (!number?.value) {
-    return;
-  }
-
-  const fee = 3 * Number(number.value);
-
-  const price: HTMLInputElement | null = document.querySelector('#price-box');
-
-  if (price == null) {
-    return;
-  }
-
-  price.innerHTML = '$' + fee.toFixed(1);
-  price.innerHTML = `
-    <span class="price-text">Total:</span>
-    <span class="price-total">$${fee.toFixed(1)} </span>
-    `;
-}
-
-function allowMakeQuotation(): boolean {
-  const modelId: string | null = getQueryValue('modelId');
-
-  if (modelId == null || !isNumber(+modelId) || Number(modelId) >= 400000) {
-    return false;
-  }
-
-  return true;
-}
-
-function makeQuotation(): void {
-  if (allowMakeQuotation()) {
-    return makeQuotationForBox();
-  } else {
-    return makeQuotationForMockup();
-  }
 }
 
 // Transition animation method for the slide switch component
@@ -482,25 +31,25 @@ function onSwitch2DAnd3D(type: string): void {
     document.querySelector('.box-info-slider');
 
   if (type === '3d') {
-    switchItems[0].className = 'switch-item active';
-    switchItems[1].className = 'switch-item';
-    switchItems[2].className = 'switch-item';
+    switchItems[0].className = `${styles['switch-item']} ${styles['active']} switch-item active`;
+    switchItems[1].className = `${styles['switch-item']} switch-item`;
+    switchItems[2].className = `${styles['switch-item']} switch-item`;
 
     if (boxInfo != null) {
       boxInfo.style.transform = 'translateX(0)';
     }
   } else if (type === 'dieline') {
-    switchItems[0].className = 'switch-item';
-    switchItems[1].className = 'switch-item active';
-    switchItems[2].className = 'switch-item';
+    switchItems[0].className = `${styles['switch-item']} switch-item`;
+    switchItems[1].className = `${styles['switch-item']} ${styles['active']} switch-item active`;
+    switchItems[2].className = `${styles['switch-item']} switch-item`;
 
     if (boxInfo != null) {
       boxInfo.style.transform = 'translateX(-100%)';
     }
   } else {
-    switchItems[0].className = 'switch-item';
-    switchItems[1].className = 'switch-item';
-    switchItems[2].className = 'switch-item active';
+    switchItems[0].className = `${styles['switch-item']} switch-item`;
+    switchItems[1].className = `${styles['switch-item']} switch-item`;
+    switchItems[2].className = `${styles['switch-item']} ${styles['active']} switch-item active`;
 
     if (boxInfo != null) {
       boxInfo.style.transform = 'translateX(-200%)';
@@ -509,7 +58,7 @@ function onSwitch2DAnd3D(type: string): void {
 }
 
 function openPacdora(ratio: number): void {
-  Pacdora?.collapse('d3', ratio);
+  PacdoraServiceInstance.getPacdora()?.collapse('d3', ratio);
   const pointer: HTMLInputElement | null = document.querySelector('.pointer');
 
   if (pointer != null) {
@@ -523,95 +72,27 @@ function openPacdora(ratio: number): void {
   }
 }
 
-// Control methods for the Slider component
-function onSliderDown(e: HTMLDivElement): void {
-  const parentBounding = (
-    e.parentNode as HTMLDivElement | undefined
-  )?.getBoundingClientRect();
-  document.onpointermove = (ev): void => {
-    ev.preventDefault();
-    const { clientX } = ev;
-    const len = clientX - (parentBounding?.left ?? 0);
-    let ratio = len / (parentBounding?.width ?? 0);
-
-    if (ratio < 0) {
-      ratio = 0;
-    }
-
-    if (ratio > 1) {
-      ratio = 1;
-    }
-    Pacdora?.collapse('d3', ratio);
-    e.style.left = `${ratio * 100}%`;
-    const selected: HTMLElement | null | undefined =
-      e.parentNode?.querySelector('.slider-selecter');
-
-    if (selected == null) {
-      return;
-    }
-
-    selected.style.width = `${ratio * 100}%`;
-  };
-  document.onpointerup = (): void => {
-    document.onpointermove = null;
-    document.onpointerup = null;
-  };
-}
-
 /**
  * The callback function triggered by the dimension change event
  * updates the project via the Pacdora.setSize method.
  * @param {*} e
  * @returns
  */
-function onChangeDimension(e: HTMLSelectElement): void {
-  console.log('e: ', e);
-  let value = e.value;
+function onChangeDimension(value: string): void {
+  console.log('value: ', value);
 
-  if (value === '') {
+  if (value.trim() === '') {
     return;
-  }
-
-  if (value === 'customize') {
-    const number: string | null = prompt(
-      'Please input your dimension in the format of 315*202*62',
-      '315*202*62',
-    );
-    console.log('number: ', number);
-    const sizes: Array<string> | undefined = number?.split('*');
-
-    if (number == null || sizes == null || sizes.length !== 3) {
-      return;
-    }
-
-    const length = Number(sizes[0]);
-    const width = Number(sizes[1]);
-    const height = Number(sizes[2]);
-
-    if (!isNumber(length) || !isNumber(width) || !isNumber(height)) {
-      e.selectedIndex = 0;
-
-      return;
-    }
-
-    const newOption: HTMLOptionElement = document.createElement('option');
-    newOption.value = number;
-    newOption.text = number + 'mm';
-
-    e.add(newOption, e.options[1]);
-    e.selectedIndex = 1;
-    value = number;
   }
 
   console.log('value: ', value);
   const size = value.split('*');
-  Pacdora?.setSize({
+  PacdoraServiceInstance.getPacdora()?.setSize({
     length: Number(size[0]),
     width: Number(size[1]),
     height: Number(size[2]),
     async: true,
   });
-  // makeQuotation();
 }
 
 /**
@@ -619,7 +100,9 @@ function onChangeDimension(e: HTMLSelectElement): void {
  * updates the project via the Pacdora.setMaterial method.
  * @param {*} e
  */
-function onChangeMaterial(e: HTMLSelectElement): void {
+function onChangeMaterial(
+  e: EventTarget & { value: string; name: string },
+): void {
   const value = e.value;
 
   if (value !== '') {
@@ -649,7 +132,6 @@ function onChangeMaterial(e: HTMLSelectElement): void {
         break;
     }
   }
-  makeQuotation();
 }
 
 /**
@@ -657,53 +139,20 @@ function onChangeMaterial(e: HTMLSelectElement): void {
  * updates the project via the Pacdora.setThickness method.
  * @param {*} e
  */
-function onChangeThickness(e: HTMLSelectElement): void {
+function onChangeThickness(
+  e: EventTarget & { value: string; name: string },
+): void {
   const value = e.value;
 
   if (value !== '') {
-    Pacdora?.setThickness({
+    PacdoraServiceInstance.getPacdora()?.setThickness({
       value: Number(value),
       async: true,
     });
   }
-  makeQuotation();
-}
-
-function onChangePrint(e: React.ChangeEvent<HTMLSelectElement>): void {
-  console.log('event: ', e);
-  makeQuotation();
-}
-
-function onChangeFinishing(e: React.ChangeEvent<HTMLSelectElement>): void {
-  console.log('event: ', e);
-  makeQuotation();
-}
-
-function onChangeNumber(e: HTMLSelectElement): void {
-  const value = e.value;
-
-  if (value === 'customize') {
-    const number: string | null = prompt('Please input your number');
-
-    if (number == null || !isNumber(+number)) {
-      e.selectedIndex = 0;
-
-      return;
-    }
-
-    const newOption = document.createElement('option');
-    newOption.value = number;
-    newOption.text = number;
-
-    e.add(newOption, e.options[1]);
-    e.selectedIndex = 1;
-  }
-
-  makeQuotation();
 }
 
 function onBuyClick(): void {
-  makeQuotation();
   const message = document.querySelector('.toast-message');
 
   if (message) {
@@ -714,30 +163,43 @@ function onBuyClick(): void {
   }
 }
 
-// function onStep(count: number): void {
-//   if (document.getElementById('count')?.innerText == null) {
-//     return;
-//   }
-
-//   const cur: number = Number(document.getElementById('count').innerText);
-
-//   if (cur + count <= 0) {
-//     return;
-//   }
-
-//   document.getElementById('count').innerText = cur + count;
-// }
-
-function isNumber(content: number): boolean {
-  return !isNaN(content);
-}
-
 const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
+  const [sliderValue, setSlider] = React.useState<number>(100);
+  const [material, setMaterial] = useState('');
+  const [thickness, setThickness] = useState('');
+  const [print, setPrint] = useState('outside');
+  const [finishing, setFinishing] = useState('gloss');
+  const [quantity, setQuantity] = useState('500');
+  const [selectedDimension, setSelectedDimension] = useState<string>('');
+  console.log(selectedDimension);
+
+  const handleSliderChange = (
+    event: Event,
+    newValue: number | number[],
+  ): void => {
+    if (typeof newValue != 'number') {
+      newValue = 50;
+    }
+
+    setSlider(newValue);
+    console.log('newValue: ', newValue);
+    console.log('newValue / 100: ', newValue / 100);
+    console.log('Pacdora: ', PacdoraServiceInstance.getPacdora());
+    PacdoraServiceInstance.getPacdora()?.collapse('d3', newValue / 100);
+    console.log('newValue / 100: ', newValue / 100);
+  };
+
+  const handleDimensionChange = (dimension: string): void => {
+    console.log('Selected Dimension:', dimension);
+    setSelectedDimension(dimension);
+    onChangeDimension(dimension);
+  };
+
   return (
     <Container sx={{ mt: 4 }}>
       <div className={styles['box-info']}>
         <div className={styles['left']}>
-          <div className={styles['box-info-slider']}>
+          <div className={`${styles['box-info-slider']} box-info-slider`}>
             <div className={`${styles['box-info-item']} ${styles['active']}`}>
               {/* <!-- 3D box expansion and collapse control component start --> */}
               <div
@@ -746,15 +208,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
                 data-position='bottom'
               >
                 <div onClick={() => openPacdora(0)}>Open</div>
-                <div className={styles['slider-box']}>
-                  <div className={styles['slider-selecter']}></div>
-                  <div
-                    className={styles['pointer']}
-                    onPointerDown={(e: React.PointerEvent<HTMLDivElement>) =>
-                      onSliderDown(e as unknown as HTMLDivElement)
-                    }
-                  ></div>
-                </div>
+                <Slider
+                  size='small'
+                  aria-label='Box State'
+                  value={sliderValue}
+                  onChange={handleSliderChange}
+                  sx={{ marginLeft: 1, marginRight: 1 }}
+                />
                 <div onClick={() => openPacdora(1)}>Close</div>
               </div>
               {/* <!-- 3D box expansion and collapse control component end --> */}
@@ -771,7 +231,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             {/* <!-- Pacdora component data-pacdora-ui="dieline" start --> */}
             <div className={styles['box-info-item']} data-tip-position='center'>
               <div
-                className={styles['dieline']}
+                className={`${styles['dieline']} dieline`}
                 data-pacdora-ui='dieline'
               ></div>
             </div>
@@ -781,7 +241,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             <div className={styles['box-info-item']} data-tip-position='center'>
               <div
                 data-pacdora-ui='3d-preview'
-                className={styles['preview']}
+                className={`${styles['preview']} preview`}
               ></div>
             </div>
             {/* <!-- Pacdora-component data-pacdora-ui="3d-preview" end --> */}
@@ -790,172 +250,138 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
           {/* <!-- Slide Switch Component --> */}
           <div className={styles['d3-and-d2-switch']} data-ui-tip='switch'>
             <div
-              className={`${styles['switch-item']} ${styles['active']}`}
+              className={`${styles['switch-item']} ${styles['active']} switch-item active`}
               onClick={() => onSwitch2DAnd3D('3d')}
             >
               3D
             </div>
             <div
-              className={styles['switch-item']}
+              className={`${styles['switch-item']} switch-item active`}
               onClick={() => onSwitch2DAnd3D('dieline')}
             >
               Dieline
             </div>
             <div
-              className={styles['switch-item']}
+              className={`${styles['switch-item']} switch-item active`}
               onClick={() => onSwitch2DAnd3D('2d')}
             >
               2D
             </div>
           </div>
-          {/* <!-- Slide Switch Component end --> */}
-          {/* <div
-            className={`${styles['pac-loading']} ${styles['crop-parent']}`}
-          ></div> */}
         </div>
         <div className={styles['right']}>
-          <div className={styles['sub-title']} data-ui-tip='dimension'>
-            Dimension
-          </div>
-          <div className={styles['selector-box']}>
-            <select
-              onChange={(e) =>
-                onChangeDimension(e as unknown as HTMLSelectElement)
-              }
-              id='dimension'
-            >
-              <option value=''>Choose the dimension</option>
-              <option value='315*202*62'>315*202*62mm</option>
-              <option value='150*100*50'>150*100*50mm</option>
-              <option value='360*240*40'>360*240*40mm</option>
-              <option value='customize'>Customize</option>
-            </select>
-          </div>
-          <div
-            className={`${styles['sub-title']} ${styles['mt30']}`}
-            data-ui-tip='material'
-          >
-            Material
-          </div>
-          <div className={styles['selector-box']}>
-            <select
-              onChange={(e) =>
-                onChangeMaterial(e as unknown as HTMLSelectElement)
-              }
-              id='material'
-            >
-              <option value=''>Choose the material</option>
-              <option value='White card board'>White card board</option>
-              <option value='E-flute paper'>E-flute paper</option>
-              <option value='Kraft paper'>Dark kraft paper</option>
-            </select>
-          </div>
-          <div
-            className={`${styles['sub-title']} ${styles['mt30']}`}
-            data-ui-tip='thickness'
-          >
-            Thickness
-          </div>
-          <div className={styles['selector-box']}>
-            <select
-              onChange={(e) =>
-                onChangeThickness(e as unknown as HTMLSelectElement)
-              }
-              id='thickness'
-            >
-              <option value=''>Choose the thickness</option>
-              <option value='1.5'>1.5mm</option>
-              <option value='1'>1mm</option>
-              <option value='2'>2mm</option>
-            </select>
-          </div>
-
-          <div className={styles['flex-between']} id='quotation-selects'>
-            <div className={styles['flex1']}>
-              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
-                Print
-              </div>
-              <div className={styles['selector-box']}>
-                <select
-                  onChange={(e) => onChangePrint(e)}
-                  id='print'
-                  defaultValue='outside'
-                >
-                  <option value=''>Choose the print method</option>
-                  <option value='blank'>Blank</option>
-                  <option value='outside'>Outside</option>
-                  <option value='inside'>Inside</option>
-                  <option value='both'>Both Sides</option>
-                </select>
-              </div>
+          <Box>
+            <div className={styles['sub-title']} data-ui-tip='dimension'>
+              Dimension
             </div>
+            <DimensionSelector onDimensionChange={handleDimensionChange} />
+          </Box>
 
-            <div className={`${styles['flex1']} ${styles['ml20']}`}>
-              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
-                Finishing
-              </div>
-              <div className={styles['selector-box']}>
-                <select
-                  onChange={(e) => onChangeFinishing(e)}
-                  id='finishing'
-                  defaultValue='gloss'
-                >
-                  <option value=''>Choose the Finishing</option>
-                  <option value='blank'>Blank</option>
-                  <option value='gloss'>Gloss</option>
-                  <option value='matte'>Matte</option>
-                </select>
-              </div>
+          <Box>
+            <div className={styles['sub-title']} data-ui-tip='material'>
+              Material
             </div>
-          </div>
+            <FormControl fullWidth className={styles['selector-box']}>
+              <InputLabel id='material-label'>Choose the material</InputLabel>
+              <Select
+                labelId='material-label'
+                value={material}
+                onChange={(e) => {
+                  setMaterial(e.target.value);
+                  onChangeMaterial(e.target);
+                }}
+              >
+                <MenuItem value=''>Choose the material</MenuItem>
+                <MenuItem value='White card board'>White card board</MenuItem>
+                <MenuItem value='E-flute paper'>E-flute paper</MenuItem>
+                <MenuItem value='Kraft paper'>Dark kraft paper</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-          <div className={`${styles['flex-between']} ${styles['flex-end']}`}>
-            {/* <!-- <div className="ml-auto number-box">
-                  <div className="number-control" onClick={() => onStep(-1)}>-</div>
-                  <div id="count">1</div>
-                  <div className="number-control" onClick={() => onStep(1)}>+</div>
-                </div> --> */}
-
-            <div>
-              <div className={`${styles['sub-title']} ${styles['mt30']}`}>
-                Quantity
-              </div>
-              <div className={styles['selector-box']}>
-                <select
-                  onChange={(e) =>
-                    onChangeNumber(e as unknown as HTMLSelectElement)
-                  }
-                  id='number'
-                  defaultValue='500'
-                >
-                  <option value='500'>500</option>
-                  <option value='1000'>1000</option>
-                  <option value='2000'>2000</option>
-                  <option value='customize'>Customize</option>
-                </select>
-              </div>
+          <Box>
+            <div className={styles['sub-title']} data-ui-tip='thickness'>
+              Thickness
             </div>
+            <FormControl fullWidth className={styles['selector-box']}>
+              <InputLabel id='thickness-label'>Choose the thickness</InputLabel>
+              <Select
+                labelId='thickness-label'
+                value={thickness}
+                onChange={(e) => {
+                  setThickness(e.target.value);
+                  onChangeThickness(e.target);
+                }}
+              >
+                <MenuItem value=''>Choose the thickness</MenuItem>
+                <MenuItem value='1.5'>1.5mm</MenuItem>
+                <MenuItem value='1'>1mm</MenuItem>
+                <MenuItem value='2'>2mm</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
-            <div
-              className={`${styles['price-box']} ${styles['mt30']}`}
-              id='price-box'
-            >
-              {/* <!-- <span className="price-unit">$1.22 / unit</span> -->
-                  <!-- <span className="price-text">Total:</span> -->
-                  <!-- <span className="price-total">$200</span> --> */}
-            </div>
-          </div>
-          <div className={styles['btn-group']}>
-            <div
+          <Box>
+            <div className={styles['sub-title']}>Print</div>
+            <FormControl fullWidth className={styles['selector-box']}>
+              <InputLabel id='print-label'>Choose the print method</InputLabel>
+              <Select
+                labelId='print-label'
+                value={print}
+                onChange={(e) => setPrint(e.target.value)}
+              >
+                <MenuItem value=''>Choose the print method</MenuItem>
+                <MenuItem value='blank'>Blank</MenuItem>
+                <MenuItem value='outside'>Outside</MenuItem>
+                <MenuItem value='inside'>Inside</MenuItem>
+                <MenuItem value='both'>Both Sides</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
+            <div className={styles['sub-title']}>Finishing</div>
+            <FormControl fullWidth className={styles['selector-box']}>
+              <InputLabel id='finishing-label'>Choose the finishing</InputLabel>
+              <Select
+                labelId='finishing-label'
+                value={finishing}
+                onChange={(e) => setFinishing(e.target.value)}
+              >
+                <MenuItem value=''>Choose the finishing</MenuItem>
+                <MenuItem value='blank'>Blank</MenuItem>
+                <MenuItem value='gloss'>Gloss</MenuItem>
+                <MenuItem value='matte'>Matte</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+
+          <Box>
+            <div className={styles['sub-title']}>Quantity</div>
+            <FormControl fullWidth className={styles['selector-box']}>
+              <InputLabel id='quantity-label'>Choose the quantity</InputLabel>
+              <Select
+                labelId='quantity-label'
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+              >
+                <MenuItem value='500'>500</MenuItem>
+                <MenuItem value='1000'>1000</MenuItem>
+                <MenuItem value='2000'>2000</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+          <ButtonGroup className={styles['btn-group']}>
+            <Button
               className={`${styles['btn']} ${styles['btn-buy']}`}
               onClick={() => onBuyClick()}
             >
               {/* <div
-                className={`${styles['pac-loading']} ${styles['small']} ${styles['white']}`}
-              ></div> */}
+      className={`${styles['pac-loading']} ${styles['small']} ${styles['white']}`}
+    ></div> */}
               Add to Cart
-            </div>
-            <div
+            </Button>
+            <Button
               className={`${styles['btn']} ${styles['design-btn']}`}
               data-pacdora-ui='design-btn'
               data-save-screenshot='false'
@@ -963,11 +389,11 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
               data-ui-tip='editor'
             >
               {/* <div
-                className={`${styles['pac-loading']} ${styles['small']}`}
-              ></div> */}
+      className={`${styles['pac-loading']} ${styles['small']}`}
+    ></div> */}
               Design online
-            </div>
-          </div>
+            </Button>
+          </ButtonGroup>
           <div
             className={styles['download-text']}
             data-pacdora-ui='download'
