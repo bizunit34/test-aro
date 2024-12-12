@@ -12,11 +12,5 @@ export interface OrderModel extends CoreModel {
   orderDate?: Date;
   shipByDate?: Date;
   numberOfLines: number;
-  // for now, we won't implement the price fields on the client side
-  // subtotal?: number;
-  // tax?: number;
-  // discount?: number;
-  // freight?: number;
-  // total?: number;
   order_detail: Array<OrderDetailModel>;
 }

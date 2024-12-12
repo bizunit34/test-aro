@@ -190,7 +190,7 @@ class OrderService {
     return updatedCart;
   }
 
-  public updateOrderDetailInCart(
+  public addToCart(
     orderDetailId: number,
     options: { quantityOrdered: number },
   ): void {

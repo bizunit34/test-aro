@@ -28,7 +28,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 }));
 
 const Header: React.FC = () => {
-  const [cartCount, setCartCount] = useState(3);
+  const [cartCount, setCartCount] = useState(0);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   useEffect(() => {

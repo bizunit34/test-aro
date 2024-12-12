@@ -6,6 +6,4 @@ export interface OrderDetailModel extends CoreModel {
   quantityOrdered: number;
   quantityBackordered: number;
   quantityShipped: number;
-  // initial implementation doesn't plan to involve price
-  // price: number;
 }
