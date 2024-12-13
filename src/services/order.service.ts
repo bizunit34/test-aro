@@ -114,13 +114,7 @@ class OrderService {
     let detailId: number = 1;
 
     for (const detail of updatedOrderDetails) {
-      details.push(
-        this.createOrderDetailRecord(
-          detail.item,
-          detail.quantityOrdered,
-          detailId,
-        ),
-      );
+      details.push(this.createOrderDetailRecord(detail.item, detail.quantityOrdered, detailId));
       detailId++;
     }
 
@@ -190,17 +184,12 @@ class OrderService {
     return updatedCart;
   }
 
-  public addToCart(
-    orderDetailId: number,
-    options: { quantityOrdered: number },
-  ): void {
+  public addToCart(orderDetailId: number, options: { quantityOrdered: number }): void {
     const details: Array<OrderDetailModel> = [];
     const activeCart: OrderModel | undefined = this.activeCart?.value;
 
     if (activeCart == null) {
-      console.error(
-        `The detail could not be removed due to the cart not existing.`,
-      );
+      console.error(`The detail could not be removed due to the cart not existing.`);
 
       return;
     }
@@ -228,9 +217,7 @@ class OrderService {
     const activeCart: OrderModel | undefined = this.activeCart?.value;
 
     if (activeCart == null) {
-      console.error(
-        `The detail could not be removed due to the cart not existing.`,
-      );
+      console.error(`The detail could not be removed due to the cart not existing.`);
 
       return;
     }
@@ -275,10 +262,7 @@ class OrderService {
 
   public setCart(cart: OrderModel): void {
     this.activeCart?.next(cart);
-    LocalStorageServiceInstance.set(
-      OrderService.CART_KEY,
-      JSON.stringify(cart),
-    );
+    LocalStorageServiceInstance.set(OrderService.CART_KEY, JSON.stringify(cart));
   }
 
   public submitCart(): void {

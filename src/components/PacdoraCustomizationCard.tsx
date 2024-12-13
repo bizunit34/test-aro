@@ -26,8 +26,7 @@ interface ItemDetailsProps {
 // Transition animation method for the slide switch component
 function onSwitch2DAnd3D(type: string): void {
   const switchItems = document.querySelectorAll('.switch-item');
-  const boxInfo: HTMLInputElement | null =
-    document.querySelector('.box-info-slider');
+  const boxInfo: HTMLInputElement | null = document.querySelector('.box-info-slider');
 
   if (type === '3d') {
     switchItems[0].className = `${styles['switch-item']} ${styles['active']} switch-item active`;
@@ -63,8 +62,7 @@ function openPacdora(ratio: number): void {
   if (pointer != null) {
     pointer.style.left = `${ratio * 100}%`;
   }
-  const selected: HTMLInputElement | null =
-    document.querySelector('.slider-selecter');
+  const selected: HTMLInputElement | null = document.querySelector('.slider-selecter');
 
   if (selected != null) {
     selected.style.width = `${ratio * 100}%`;
@@ -99,9 +97,7 @@ function onChangeDimension(value: string): void {
  * updates the project via the Pacdora.setMaterial method.
  * @param {*} e
  */
-function onChangeMaterial(
-  e: EventTarget & { value: string; name: string },
-): void {
+function onChangeMaterial(e: EventTarget & { value: string; name: string }): void {
   const value = e.value;
 
   if (value !== '') {
@@ -109,16 +105,14 @@ function onChangeMaterial(
       case 'White card board':
         PacdoraServiceInstance.getPacdora()?.setMaterial({
           name: 'White card board',
-          image:
-            '//cdn.pacdora.com/science/image/94e8078a-9931-42cd-97ed-57883bd88085.png',
+          image: '//cdn.pacdora.com/science/image/94e8078a-9931-42cd-97ed-57883bd88085.png',
           async: true,
         });
         break;
       case 'E-flute paper':
         PacdoraServiceInstance.getPacdora()?.setMaterial({
           name: 'E-flute paper',
-          image:
-            '//cdn.pacdora.com/science/image/00e45c0b-9cf7-4d39-bdc8-82bb202909d9.png',
+          image: '//cdn.pacdora.com/science/image/00e45c0b-9cf7-4d39-bdc8-82bb202909d9.png',
           async: true,
         });
         break;
@@ -138,9 +132,7 @@ function onChangeMaterial(
  * updates the project via the Pacdora.setThickness method.
  * @param {*} e
  */
-function onChangeThickness(
-  e: EventTarget & { value: string; name: string },
-): void {
+function onChangeThickness(e: EventTarget & { value: string; name: string }): void {
   const value = e.value;
 
   if (value !== '') {
@@ -172,10 +164,7 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
   const [selectedDimension, setSelectedDimension] = useState<string>('');
   console.log(selectedDimension);
 
-  const handleSliderChange = (
-    event: Event,
-    newValue: number | number[],
-  ): void => {
+  const handleSliderChange = (event: Event, newValue: number | number[]): void => {
     if (typeof newValue != 'number') {
       newValue = 50;
     }
@@ -225,19 +214,13 @@ const PacdoraCustomizationCard: React.FC<ItemDetailsProps> = () => {
             </div>
             {/* <!-- Pacdora component data-pacdora-ui="dieline" start --> */}
             <div className={styles['box-info-item']} data-tip-position='center'>
-              <div
-                className={`${styles['dieline']} dieline`}
-                data-pacdora-ui='dieline'
-              ></div>
+              <div className={`${styles['dieline']} dieline`} data-pacdora-ui='dieline'></div>
             </div>
             {/* <!-- Pacdora component data-pacdora-ui="dieline" end --> */}
 
             {/* <!-- Pacdora-component data-pacdora-ui="3d-preview" start --> */}
             <div className={styles['box-info-item']} data-tip-position='center'>
-              <div
-                data-pacdora-ui='3d-preview'
-                className={`${styles['preview']} preview`}
-              ></div>
+              <div data-pacdora-ui='3d-preview' className={`${styles['preview']} preview`}></div>
             </div>
             {/* <!-- Pacdora-component data-pacdora-ui="3d-preview" end --> */}
           </div>

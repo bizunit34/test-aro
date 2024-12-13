@@ -12,7 +12,6 @@ class SessionStorageService {
   }
 }
 
-const SessionStorageServiceInstance: SessionStorageService =
-  new SessionStorageService();
+const SessionStorageServiceInstance: SessionStorageService = new SessionStorageService();
 
 export default SessionStorageServiceInstance;

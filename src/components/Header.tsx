@@ -1,19 +1,7 @@
 'use client';
 
-import {
-  Menu as MenuIcon,
-  ShoppingCart as ShoppingCartIcon,
-} from '@mui/icons-material';
-import {
-  AppBar,
-  Badge,
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-  Typography,
-} from '@mui/material';
+import { Menu as MenuIcon, ShoppingCart as ShoppingCartIcon } from '@mui/icons-material';
+import { AppBar, Badge, Box, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
@@ -61,10 +49,7 @@ const Header: React.FC = () => {
 
   return (
     <AppBar position='static' color='primary'>
-      <Toolbar
-        variant='dense'
-        sx={{ display: 'flex', justifyContent: 'space-between' }}
-      >
+      <Toolbar variant='dense' sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Link href='/' passHref>
           <Typography
             variant='h6'
@@ -122,18 +107,11 @@ const Header: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <StyledMenu
-            anchorEl={anchorEl}
-            open={Boolean(anchorEl)}
-            onClose={handleMenuClose}
-          >
+          <StyledMenu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
             {navLinks.map((link) => (
               <MenuItem key={link.label} onClick={handleMenuClose}>
                 <Link href={link.href} passHref>
-                  <Typography
-                    component='div'
-                    sx={{ textDecoration: 'none', color: 'inherit' }}
-                  >
+                  <Typography component='div' sx={{ textDecoration: 'none', color: 'inherit' }}>
                     {link.label}
                   </Typography>
                 </Link>
@@ -143,10 +121,7 @@ const Header: React.FC = () => {
         </Box>
 
         <IconButton color='inherit'>
-          <Badge
-            badgeContent={cartCount > 0 ? cartCount : null}
-            color='secondary'
-          >
+          <Badge badgeContent={cartCount > 0 ? cartCount : null} color='secondary'>
             <ShoppingCartIcon />
           </Badge>
         </IconButton>

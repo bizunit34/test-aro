@@ -17,9 +17,7 @@ interface DimensionSelectorProps {
   onDimensionChange: (selectedDimension: string) => void;
 }
 
-const DimensionSelector: React.FC<DimensionSelectorProps> = ({
-  onDimensionChange,
-}) => {
+const DimensionSelector: React.FC<DimensionSelectorProps> = ({ onDimensionChange }) => {
   const [dimensionOptions, setDimensionOptions] = useState([
     '315*202*62',
     '150*100*50',

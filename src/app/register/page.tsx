@@ -1,13 +1,6 @@
 'use client';
 
-import {
-  Alert,
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Alert, Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
@@ -43,11 +36,7 @@ const Register: React.FC = () => {
           Sign Up
         </Typography>
         {error && <Alert severity='error'>{error}</Alert>}
-        {success && (
-          <Alert severity='success'>
-            Sign-up successful! Redirecting to login...
-          </Alert>
-        )}
+        {success && <Alert severity='success'>Sign-up successful! Redirecting to login...</Alert>}
         <Box sx={{ mt: 2 }}>
           <TextField
             label='Name'

@@ -62,10 +62,7 @@ const ItemDetailsPage: React.FC = () => {
 
   return (
     <>
-      <ItemDetails
-        item={item}
-        frequentlyPurchasedTogether={frequentlyPurchasedTogether}
-      />
+      <ItemDetails item={item} frequentlyPurchasedTogether={frequentlyPurchasedTogether} />
     </>
   );
 };

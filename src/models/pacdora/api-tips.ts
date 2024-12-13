@@ -648,8 +648,7 @@ const ApiTips: Record<
         content: [
           {
             type: 'p',
-            value:
-              'The Pacdora API allows you to list, re-edit, and delete user’s projects.',
+            value: 'The Pacdora API allows you to list, re-edit, and delete user’s projects.',
           },
         ],
       },

@@ -5,10 +5,8 @@ class ItemService {
     {
       _id: 3333,
       name: 'Custom dimensions double tray boxes storage with front opening dieline 100103',
-      description:
-        'Double tray boxes storage with front opening cardboard mailer mockup',
-      image:
-        '//cdn.pacdora.com/image-resize/500xauto_outside/preview/100103-white-board-71.jpg',
+      description: 'Double tray boxes storage with front opening cardboard mailer mockup',
+      image: '//cdn.pacdora.com/image-resize/500xauto_outside/preview/100103-white-board-71.jpg',
       modelId: '100103',
       quantityOnHand: 500,
       quantityOnOrder: 20,
@@ -18,8 +16,7 @@ class ItemService {
       _id: 3334,
       name: 'Custom dimensions inserts tuck end box inserts dieline 310030',
       description: 'Inserts tuck end box inserts square inserts mockup',
-      image:
-        '//cdn.pacdora.com/image-resize/500xauto_outside/preview/160010-flute-31.jpg',
+      image: '//cdn.pacdora.com/image-resize/500xauto_outside/preview/160010-flute-31.jpg',
       modelId: '310030',
       quantityOnHand: 1000,
       quantityOnOrder: 40,

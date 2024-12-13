@@ -29,12 +29,7 @@ const CatalogListCard: React.FC<CatalogProps> = ({ item, hasPacdora }) => {
   return (
     <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={item._id}>
       <Card>
-        <CardMedia
-          component='img'
-          height='140'
-          image={item.image}
-          alt={item.name}
-        />
+        <CardMedia component='img' height='140' image={item.image} alt={item.name} />
         <CardContent>
           <Typography gutterBottom variant='h5'>
             {item.name}

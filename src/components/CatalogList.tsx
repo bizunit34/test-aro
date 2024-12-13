@@ -31,10 +31,7 @@ const CatalogList: React.FC<CatalogProps> = ({ items, itemsPerPage = 6 }) => {
 
   const totalPages = Math.ceil(items.length / itemsPerPage);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ): void => {
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number): void => {
     if (page === currentPage) {
       return;
     }

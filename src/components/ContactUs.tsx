@@ -119,9 +119,7 @@ const ContactUs: React.FC = () => {
               >
                 {services.map((service) => (
                   <MenuItem key={service} value={service}>
-                    <Checkbox
-                      checked={selectedServices.indexOf(service) > -1}
-                    />
+                    <Checkbox checked={selectedServices.indexOf(service) > -1} />
                     <ListItemText primary={service} />
                   </MenuItem>
                 ))}

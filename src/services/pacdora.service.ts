@@ -13,10 +13,7 @@ class PacdoraService {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- This is added via script and thus cannot be tracked until here
     console.log('initializePacdora Pacdora: ', window.Pacdora);
-    console.log(
-      'initializePacdora PACDORA_API_ID: ',
-      process.env.NEXT_PUBLIC_PACDORA_API_ID,
-    );
+    console.log('initializePacdora PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore -- This is added via script and thus cannot be tracked until here
@@ -28,10 +25,7 @@ class PacdoraService {
       this.Pacdora = window.Pacdora;
     }
 
-    if (
-      this.Pacdora == null ||
-      process.env.NEXT_PUBLIC_PACDORA_API_ID == null
-    ) {
+    if (this.Pacdora == null || process.env.NEXT_PUBLIC_PACDORA_API_ID == null) {
       console.error('There was an issue with loading the Pacdora script.');
 
       return;
@@ -62,15 +56,9 @@ class PacdoraService {
     doneBtn?: string;
   }): Promise<void> {
     console.log('createPacdoraProject Pacdora: ', this.Pacdora);
-    console.log(
-      'createPacdoraProject PACDORA_API_ID: ',
-      process.env.NEXT_PUBLIC_PACDORA_API_ID,
-    );
+    console.log('createPacdoraProject PACDORA_API_ID: ', process.env.NEXT_PUBLIC_PACDORA_API_ID);
 
-    if (
-      this.Pacdora == null ||
-      process.env.NEXT_PUBLIC_PACDORA_API_ID == null
-    ) {
+    if (this.Pacdora == null || process.env.NEXT_PUBLIC_PACDORA_API_ID == null) {
       console.error('There was an issue with creating the Pacdora Project.');
 
       return;
@@ -91,8 +79,7 @@ class PacdoraService {
   public applyListeners(): void {
     // Listen for the event of `data-pacdora-ui="download"`
     this.Pacdora?.$on('download:start', () => {
-      const downloadEle: HTMLElement | null =
-        document.querySelector('.download-text');
+      const downloadEle: HTMLElement | null = document.querySelector('.download-text');
 
       if (downloadEle == null) {
         return;
@@ -101,8 +88,7 @@ class PacdoraService {
       downloadEle.innerText = 'Downloading...';
     });
     this.Pacdora?.$on('download:success', () => {
-      const downloadEle: HTMLElement | null =
-        document.querySelector('.download-text');
+      const downloadEle: HTMLElement | null = document.querySelector('.download-text');
 
       if (downloadEle == null) {
         return;
@@ -114,8 +100,7 @@ class PacdoraService {
       }, 1000);
     });
     this.Pacdora?.$on('download:fail', () => {
-      const downloadEle: HTMLElement | null =
-        document.querySelector('.download-text');
+      const downloadEle: HTMLElement | null = document.querySelector('.download-text');
 
       if (downloadEle == null) {
         return;
@@ -130,17 +115,11 @@ class PacdoraService {
     // Listen for the callback event after the `data-pacdora-ui="design-btn"` component editor has successfully opened
     this.Pacdora?.$on('design:opened', () => {
       const sizeBox: HTMLElement | null = document.querySelector('.size-box');
-      const materialBox: HTMLElement | null = document.querySelector(
-        '.pacdora-material-box',
-      );
-      const recommendBox: HTMLElement | null = document.querySelector(
-        '.recommend-color-root',
-      );
+      const materialBox: HTMLElement | null = document.querySelector('.pacdora-material-box');
+      const recommendBox: HTMLElement | null = document.querySelector('.recommend-color-root');
       const saveBtn: HTMLElement | null = document.querySelector('.save-btn');
-      const watermark: HTMLElement | null =
-        document.querySelector('.pacdora-watermark');
-      const designHeader: HTMLElement | null =
-        document.querySelector('.design-body');
+      const watermark: HTMLElement | null = document.querySelector('.pacdora-watermark');
+      const designHeader: HTMLElement | null = document.querySelector('.design-body');
 
       if (sizeBox != null) {
         sizeBox.dataset.uiTip = 'editor-size';
@@ -170,14 +149,7 @@ class PacdoraService {
         designHeader.dataset.position = 'bottom';
       }
 
-      const tipEles = [
-        sizeBox,
-        materialBox,
-        recommendBox,
-        saveBtn,
-        watermark,
-        designHeader,
-      ];
+      const tipEles = [sizeBox, materialBox, recommendBox, saveBtn, watermark, designHeader];
 
       for (let i = 0; i < tipEles.length; i++) {
         const ele: HTMLElement | null = tipEles[i];
@@ -227,11 +199,7 @@ class PacdoraService {
     });
   }
 
-  public showApiToast(
-    ele: HTMLElement,
-    tipName: string | undefined,
-    bool: boolean,
-  ): void {
+  public showApiToast(ele: HTMLElement, tipName: string | undefined, bool: boolean): void {
     if (bool) {
       let toastEle: HTMLElement | null = ele.querySelector('.toast');
 
@@ -241,15 +209,9 @@ class PacdoraService {
         const tips = ApiTips[tipName];
         toastEle.innerHTML = `Check the API of ${tips['name']}`;
 
-        if (
-          (ele.parentNode as HTMLElement | undefined)?.dataset.position ===
-          'bottom'
-        ) {
+        if ((ele.parentNode as HTMLElement | undefined)?.dataset.position === 'bottom') {
           toastEle.className = 'toast bottom';
-        } else if (
-          (ele.parentNode as HTMLElement | undefined)?.dataset.position ===
-          'right'
-        ) {
+        } else if ((ele.parentNode as HTMLElement | undefined)?.dataset.position === 'right') {
           toastEle.className = 'toast right';
         }
 

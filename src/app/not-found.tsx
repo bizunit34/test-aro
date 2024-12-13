@@ -16,19 +16,10 @@ const NotFound: React.FC = () => {
       }}
     >
       {/* Image */}
-      <Image
-        src='/404-robot.jpg'
-        alt='404 Illustration'
-        width={500}
-        height={300}
-      />
+      <Image src='/404-robot.jpg' alt='404 Illustration' width={500} height={300} />
 
       {/* 404 Text */}
-      <Typography
-        variant='h1'
-        color='primary'
-        sx={{ fontSize: '4rem', fontWeight: 'bold' }}
-      >
+      <Typography variant='h1' color='primary' sx={{ fontSize: '4rem', fontWeight: 'bold' }}>
         404
       </Typography>
 

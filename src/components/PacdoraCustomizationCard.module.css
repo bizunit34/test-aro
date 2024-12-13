@@ -572,16 +572,7 @@
   border: solid 2px transparent;
   flex: 1;
   background-image: linear-gradient(to right, #fff, #fff),
-    conic-gradient(
-      #ff7a00,
-      #fff500,
-      #00ff85,
-      #00f0ff,
-      #000aff,
-      #8f00ff,
-      #ff005c,
-      #fe0000
-    );
+    conic-gradient(#ff7a00, #fff500, #00ff85, #00f0ff, #000aff, #8f00ff, #ff005c, #fe0000);
 }
 .download-text {
   font-family: Gilroy;

@@ -1,11 +1,6 @@
 'use client';
 
-import {
-  Alert,
-  Snackbar,
-  SnackbarCloseReason,
-  SnackbarOrigin,
-} from '@mui/material';
+import { Alert, Snackbar, SnackbarCloseReason, SnackbarOrigin } from '@mui/material';
 import Grow, { GrowProps } from '@mui/material/Grow';
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 
@@ -31,12 +26,8 @@ interface ToastContextType {
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
-export const ToastProvider: React.FC<{ children: ReactNode }> = ({
-  children,
-}) => {
-  const [snackPack, setSnackPack] = React.useState<readonly SnackbarMessage[]>(
-    [],
-  );
+export const ToastProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [snackPack, setSnackPack] = React.useState<readonly SnackbarMessage[]>([]);
   const [open, setOpen] = useState(false);
   const [toastOptions, setToastOptions] = useState<ToastOptions | undefined>({
     message: '',
@@ -54,10 +45,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [snackPack, toastOptions, open]);
   const showToast = (options: ToastOptions): void => {
-    setSnackPack((prev) => [
-      ...prev,
-      { ...options, key: new Date().getTime() },
-    ]);
+    setSnackPack((prev) => [...prev, { ...options, key: new Date().getTime() }]);
   };
 
   const handleExited = (): void => {
@@ -74,9 +62,7 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
 
     setOpen(false);
   };
-  const { vertical, horizontal }: SnackbarOrigin = getDisplayLocation(
-    toastOptions?.severity,
-  );
+  const { vertical, horizontal }: SnackbarOrigin = getDisplayLocation(toastOptions?.severity);
 
   return (
     <ToastContext.Provider value={{ showToast }}>
@@ -102,16 +88,6 @@ export const ToastProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useToast = (): ToastContextType => {
-  const context = useContext(ToastContext);
-
-  if (!context) {
-    throw new Error('useToast must be used within a ToastProvider');
-  }
-
-  return context;
-};
-
 function getDisplayLocation(severity?: string): SnackbarOrigin {
   let vertical: 'top' | 'bottom' = 'bottom';
   let horizontal: 'left' | 'center' | 'right' = 'center';
@@ -127,3 +103,13 @@ function getDisplayLocation(severity?: string): SnackbarOrigin {
 
   return { vertical, horizontal };
 }
+
+export const useToast = (): ToastContextType => {
+  const context = useContext(ToastContext);
+
+  if (!context) {
+    throw new Error('useToast must be used within a ToastProvider');
+  }
+
+  return context;
+};

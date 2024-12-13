@@ -18,19 +18,11 @@ const Footer: React.FC = () => {
       <Container maxWidth='lg'>
         <div className='flex'>
           <a className='flex' href='tel:+12486333525'>
-            <FontAwesomeIcon
-              icon={faPhone}
-              width={10}
-              style={{ marginRight: '5px' }}
-            />
+            <FontAwesomeIcon icon={faPhone} width={10} style={{ marginRight: '5px' }} />
             248.633.3525
           </a>
           <a className='flex' href='mailto:info@aroconnection.com'>
-            <FontAwesomeIcon
-              icon={faEnvelope}
-              width={10}
-              style={{ marginRight: '5px' }}
-            />
+            <FontAwesomeIcon icon={faEnvelope} width={10} style={{ marginRight: '5px' }} />
             info@aroconnection.com
           </a>
         </div>

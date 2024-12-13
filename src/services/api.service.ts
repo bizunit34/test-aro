@@ -50,56 +50,29 @@ class ApiService {
   }
 
   // Perform POST request
-  public async post<T>(
-    url: string,
-    data: unknown,
-    config?: AxiosRequestConfig,
-  ): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.post(
-      url,
-      data,
-      config,
-    );
+  public async post<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.post(url, data, config);
 
     return response.data;
   }
 
   // Perform PUT request
-  public async put<T>(
-    url: string,
-    data: unknown,
-    config?: AxiosRequestConfig,
-  ): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.put(
-      url,
-      data,
-      config,
-    );
+  public async put<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.put(url, data, config);
 
     return response.data;
   }
 
   // Perform DELETE request
   public async delete<T>(url: string, config?: AxiosRequestConfig): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.delete(
-      url,
-      config,
-    );
+    const response: AxiosResponse<T> = await this.axiosInstance.delete(url, config);
 
     return response.data;
   }
 
   // Perform PATCH request
-  public async patch<T>(
-    url: string,
-    data: unknown,
-    config?: AxiosRequestConfig,
-  ): Promise<T> {
-    const response: AxiosResponse<T> = await this.axiosInstance.patch(
-      url,
-      data,
-      config,
-    );
+  public async patch<T>(url: string, data: unknown, config?: AxiosRequestConfig): Promise<T> {
+    const response: AxiosResponse<T> = await this.axiosInstance.patch(url, data, config);
 
     return response.data;
   }

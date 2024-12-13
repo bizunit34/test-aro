@@ -18,10 +18,7 @@ const API_BASE_URL = 'https://api.example.com'; // Replace with your API base UR
 
 const UserService = {
   login: async (payload: LoginPayload): Promise<LoginResponse> => {
-    const response: { data: LoginResponse } = await axios.post(
-      `${API_BASE_URL}/login`,
-      payload,
-    );
+    const response: { data: LoginResponse } = await axios.post(`${API_BASE_URL}/login`, payload);
 
     return response.data;
   },
@@ -35,10 +32,7 @@ const UserService = {
     email: string;
     password: string;
   }): Promise<LoginResponse> => {
-    const response: { data: LoginResponse } = await axios.post(
-      `${API_BASE_URL}/signup`,
-      payload,
-    );
+    const response: { data: LoginResponse } = await axios.post(`${API_BASE_URL}/signup`, payload);
 
     return response.data;
   },

@@ -25,9 +25,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilterChange }) => {
   const [categories, setCategories] = useState<string[]>([]);
   const [subcategories, setSubcategories] = useState<string[]>([]);
   const [sortOption, setSortOption] = useState('');
-  const [availableSubcategories, setAvailableSubcategories] = useState<
-    string[]
-  >([]);
+  const [availableSubcategories, setAvailableSubcategories] = useState<string[]>([]);
 
   const categorySubcategoryMap: Record<string, string[]> = {
     Boxes: ['Cardboard Boxes', 'Gift Boxes', 'Shipping Boxes'],
@@ -35,12 +33,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilterChange }) => {
     Tubes: ['Paper Tubes', 'Plastic Tubes', 'Metal Tubes'],
   };
 
-  const sortOptions = [
-    'Price: Low to High',
-    'Price: High to Low',
-    'Popularity',
-    'Newest',
-  ];
+  const sortOptions = ['Price: Low to High', 'Price: High to Low', 'Popularity', 'Newest'];
 
   useEffect(() => {
     // Update available subcategories based on selected categories
@@ -56,9 +49,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onFilterChange }) => {
 
     // Remove any currently selected subcategories that are no longer valid
     setSubcategories((current) =>
-      current.filter((subcategory) =>
-        updatedSubcategories.includes(subcategory),
-      ),
+      current.filter((subcategory) => updatedSubcategories.includes(subcategory)),
     );
   }, [categories]);
 

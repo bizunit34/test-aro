@@ -28,10 +28,7 @@ interface ItemDetailsProps {
   frequentlyPurchasedTogether: Array<ItemModel>;
 }
 
-const ItemDetails: React.FC<ItemDetailsProps> = ({
-  item,
-  frequentlyPurchasedTogether,
-}) => {
+const ItemDetails: React.FC<ItemDetailsProps> = ({ item, frequentlyPurchasedTogether }) => {
   // let hasPacdora: boolean = false;
 
   useEffect(() => {
@@ -52,10 +49,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
         console.log('everything has been applied');
         // hasPacdora = true;
       } catch (err) {
-        console.error(
-          'An error occurred while trying to initialize Pacdora: ',
-          err,
-        );
+        console.error('An error occurred while trying to initialize Pacdora: ', err);
       }
     };
 
@@ -116,10 +110,7 @@ const ItemDetails: React.FC<ItemDetailsProps> = ({
                     sx={{ width: 80, height: 80 }}
                   />
                 </ListItemAvatar>
-                <ListItemText
-                  primary={relatedItem.name}
-                  secondary='Click to view details'
-                />
+                <ListItemText primary={relatedItem.name} secondary='Click to view details' />
               </ListItem>
             ))}
           </List>

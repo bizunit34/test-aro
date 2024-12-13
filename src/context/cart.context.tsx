@@ -10,10 +10,7 @@ interface CartContextType {
   deleteCart: () => void;
   submitCart: () => void;
   addItemToCart: (item: OrderDetailModel) => void;
-  updateItemInCart: (
-    itemId: number,
-    updatedItem: Partial<OrderDetailModel>,
-  ) => void;
+  updateItemInCart: (itemId: number, updatedItem: Partial<OrderDetailModel>) => void;
   removeItemFromCart: (itemId: number) => void;
 }
 
@@ -35,9 +32,7 @@ const getCartFromLocalStorage = (): OrderModel | null => {
 };
 
 // CartContextProvider Component
-export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<OrderModel | null>(getCartFromLocalStorage);
 
   useEffect(() => {
@@ -92,8 +87,7 @@ export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
         index === existingItemIndex
           ? {
               ...existingItem,
-              quantityOrdered:
-                existingItem.quantityOrdered + item.quantityOrdered,
+              quantityOrdered: existingItem.quantityOrdered + item.quantityOrdered,
             }
           : existingItem,
       );
@@ -109,10 +103,7 @@ export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
-  const updateItemInCart = (
-    itemId: number,
-    updatedItem: Partial<OrderDetailModel>,
-  ): void => {
+  const updateItemInCart = (itemId: number, updatedItem: Partial<OrderDetailModel>): void => {
     if (!cart) return;
 
     const updatedDetails = cart.order_detail.map((item) =>
@@ -125,9 +116,7 @@ export const CartContextProvider: React.FC<{ children: React.ReactNode }> = ({
   const removeItemFromCart = (itemId: number): void => {
     if (!cart) return;
 
-    const updatedDetails = cart.order_detail.filter(
-      (item) => item._id !== itemId,
-    );
+    const updatedDetails = cart.order_detail.filter((item) => item._id !== itemId);
     setCart({
       ...cart,
       order_detail: updatedDetails,
